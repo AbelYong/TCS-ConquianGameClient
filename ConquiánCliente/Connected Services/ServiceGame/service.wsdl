@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="Game" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="CustomBinding_IGame_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1">
+        </msb:BinaryEncoding>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="90000">
+          </wsrm:InactivityTimeout>
+          <wsrm:AcknowledgementInterval Milliseconds="200">
+          </wsrm:AcknowledgementInterval>
+        </wsrm:RMAssertion>
+        <wsaw:UsingAddressing>
+        </wsaw:UsingAddressing>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.Enums" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="IGame_JoinGame_InputMessage">
+    <wsdl:part name="parameters" element="tns:JoinGame" />
+  </wsdl:message>
+  <wsdl:message name="IGame_JoinGame_OutputMessage">
+    <wsdl:part name="parameters" element="tns:JoinGameResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGame_JoinGame_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q1:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="IGame_PlayCards_InputMessage">
+    <wsdl:part name="parameters" element="tns:PlayCards" />
+  </wsdl:message>
+  <wsdl:message name="IGame_PlayCards_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PlayCardsResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGame_PlayCards_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q2="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q2:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="IGame_DrawFromDeck_InputMessage">
+    <wsdl:part name="parameters" element="tns:DrawFromDeck" />
+  </wsdl:message>
+  <wsdl:message name="IGame_DrawFromDeck_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DrawFromDeckResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGame_DrawFromDeck_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q3="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q3:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="IGame_DiscardCard_InputMessage">
+    <wsdl:part name="parameters" element="tns:DiscardCard" />
+  </wsdl:message>
+  <wsdl:message name="IGame_DiscardCard_OutputMessage">
+    <wsdl:part name="parameters" element="tns:DiscardCardResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGame_DiscardCard_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q4="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q4:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="IGame_LeaveGame_InputMessage">
+    <wsdl:part name="parameters" element="tns:LeaveGame" />
+  </wsdl:message>
+  <wsdl:message name="IGame_PassTurn_InputMessage">
+    <wsdl:part name="parameters" element="tns:PassTurn" />
+  </wsdl:message>
+  <wsdl:message name="IGame_PassTurn_OutputMessage">
+    <wsdl:part name="parameters" element="tns:PassTurnResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGame_PassTurn_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q5="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q5:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="IGame_SwapDrawnCard_InputMessage">
+    <wsdl:part name="parameters" element="tns:SwapDrawnCard" />
+  </wsdl:message>
+  <wsdl:message name="IGame_SwapDrawnCard_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SwapDrawnCardResponse" />
+  </wsdl:message>
+  <wsdl:message name="IGame_SwapDrawnCard_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q6="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q6:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="IGame_ReportAFK_InputMessage">
+    <wsdl:part name="parameters" element="tns:ReportAFK" />
+  </wsdl:message>
+  <wsdl:message name="IGame_NotifyGameUpdate_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyGameUpdate" />
+  </wsdl:message>
+  <wsdl:message name="IGame_NotifyOpponentDrewDeck_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyOpponentDrewDeck" />
+  </wsdl:message>
+  <wsdl:message name="IGame_NotifyOpponentDiscarded_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyOpponentDiscarded" />
+  </wsdl:message>
+  <wsdl:message name="IGame_OnTimeUpdated_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnTimeUpdated" />
+  </wsdl:message>
+  <wsdl:message name="IGame_OnOpponentHandUpdated_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnOpponentHandUpdated" />
+  </wsdl:message>
+  <wsdl:message name="IGame_NotifyOpponentMeld_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyOpponentMeld" />
+  </wsdl:message>
+  <wsdl:message name="IGame_OnOpponentLeft_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:OnOpponentLeft" />
+  </wsdl:message>
+  <wsdl:message name="IGame_NotifyGameEnded_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyGameEnded" />
+  </wsdl:message>
+  <wsdl:message name="IGame_NotifyGameEndedByAFK_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyGameEndedByAFK" />
+  </wsdl:message>
+  <wsdl:portType name="IGame">
+    <wsdl:operation name="JoinGame">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/JoinGame" message="tns:IGame_JoinGame_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/JoinGameResponse" message="tns:IGame_JoinGame_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IGame/JoinGameServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:IGame_JoinGame_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PlayCards">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/PlayCards" message="tns:IGame_PlayCards_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/PlayCardsResponse" message="tns:IGame_PlayCards_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IGame/PlayCardsServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:IGame_PlayCards_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DrawFromDeck">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/DrawFromDeck" message="tns:IGame_DrawFromDeck_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/DrawFromDeckResponse" message="tns:IGame_DrawFromDeck_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IGame/DrawFromDeckServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:IGame_DrawFromDeck_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="DiscardCard">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/DiscardCard" message="tns:IGame_DiscardCard_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/DiscardCardResponse" message="tns:IGame_DiscardCard_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IGame/DiscardCardServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:IGame_DiscardCard_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="LeaveGame">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/LeaveGame" message="tns:IGame_LeaveGame_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PassTurn">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/PassTurn" message="tns:IGame_PassTurn_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/PassTurnResponse" message="tns:IGame_PassTurn_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IGame/PassTurnServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:IGame_PassTurn_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SwapDrawnCard">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/SwapDrawnCard" message="tns:IGame_SwapDrawnCard_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/SwapDrawnCardResponse" message="tns:IGame_SwapDrawnCard_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/IGame/SwapDrawnCardServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:IGame_SwapDrawnCard_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportAFK">
+      <wsdl:input wsaw:Action="http://tempuri.org/IGame/ReportAFK" message="tns:IGame_ReportAFK_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameUpdate">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/NotifyGameUpdate" message="tns:IGame_NotifyGameUpdate_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyOpponentDrewDeck">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/NotifyOpponentDrewDeck" message="tns:IGame_NotifyOpponentDrewDeck_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyOpponentDiscarded">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/NotifyOpponentDiscarded" message="tns:IGame_NotifyOpponentDiscarded_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OnTimeUpdated">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/OnTimeUpdated" message="tns:IGame_OnTimeUpdated_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OnOpponentHandUpdated">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/OnOpponentHandUpdated" message="tns:IGame_OnOpponentHandUpdated_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyOpponentMeld">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/NotifyOpponentMeld" message="tns:IGame_NotifyOpponentMeld_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="OnOpponentLeft">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/OnOpponentLeft" message="tns:IGame_OnOpponentLeft_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameEnded">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/NotifyGameEnded" message="tns:IGame_NotifyGameEnded_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameEndedByAFK">
+      <wsdl:output wsaw:Action="http://tempuri.org/IGame/NotifyGameEndedByAFK" message="tns:IGame_NotifyGameEndedByAFK_OutputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomBinding_IGame" type="tns:IGame">
+    <wsp:PolicyReference URI="#CustomBinding_IGame_policy">
+    </wsp:PolicyReference>
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="JoinGame">
+      <soap12:operation soapAction="http://tempuri.org/IGame/JoinGame" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="PlayCards">
+      <soap12:operation soapAction="http://tempuri.org/IGame/PlayCards" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="DrawFromDeck">
+      <soap12:operation soapAction="http://tempuri.org/IGame/DrawFromDeck" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="DiscardCard">
+      <soap12:operation soapAction="http://tempuri.org/IGame/DiscardCard" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="LeaveGame">
+      <soap12:operation soapAction="http://tempuri.org/IGame/LeaveGame" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="PassTurn">
+      <soap12:operation soapAction="http://tempuri.org/IGame/PassTurn" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="SwapDrawnCard">
+      <soap12:operation soapAction="http://tempuri.org/IGame/SwapDrawnCard" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="ReportAFK">
+      <soap12:operation soapAction="http://tempuri.org/IGame/ReportAFK" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameUpdate">
+      <soap12:operation soapAction="http://tempuri.org/IGame/NotifyGameUpdate" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyOpponentDrewDeck">
+      <soap12:operation soapAction="http://tempuri.org/IGame/NotifyOpponentDrewDeck" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyOpponentDiscarded">
+      <soap12:operation soapAction="http://tempuri.org/IGame/NotifyOpponentDiscarded" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnTimeUpdated">
+      <soap12:operation soapAction="http://tempuri.org/IGame/OnTimeUpdated" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnOpponentHandUpdated">
+      <soap12:operation soapAction="http://tempuri.org/IGame/OnOpponentHandUpdated" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyOpponentMeld">
+      <soap12:operation soapAction="http://tempuri.org/IGame/NotifyOpponentMeld" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OnOpponentLeft">
+      <soap12:operation soapAction="http://tempuri.org/IGame/OnOpponentLeft" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameEnded">
+      <soap12:operation soapAction="http://tempuri.org/IGame/NotifyGameEnded" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameEndedByAFK">
+      <soap12:operation soapAction="http://tempuri.org/IGame/NotifyGameEndedByAFK" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Game">
+    <wsdl:port name="CustomBinding_IGame" binding="tns:CustomBinding_IGame">
+      <soap12:address location="net.tcp://localhost:9001/Conqui%C3%A1nServidor/GameService" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:9001/Conqui%C3%A1nServidor/GameService</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Dns>localhost</Dns>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

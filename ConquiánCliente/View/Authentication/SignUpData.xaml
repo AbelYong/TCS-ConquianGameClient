@@ -1,0 +1,143 @@
+﻿<Window x:Class="ConquiánCliente.View.SignUpData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConquiánCliente.View"
+        xmlns:language="clr-namespace:ConquiánCliente.Properties.Langs"
+        mc:Ignorable="d"
+        Title="{x:Static language:Lang.GlobalSignUp}" Height="1080" Width="1920"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent">
+    <Grid>
+        <Border Background="{StaticResource PrimaryBackgroundBrush}" />
+        <Image Source="/Resources/background.jpg" 
+               Stretch="UniformToFill" 
+               HorizontalAlignment="Stretch" 
+               VerticalAlignment="Stretch"
+               Opacity="0.5"/>
+
+        <Border BorderBrush="{StaticResource BorderBrush}" 
+                BorderThickness="2" 
+                Background="{StaticResource PrimaryBackgroundBrush}" 
+                CornerRadius="10" 
+                Padding="35" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                MaxWidth="600" Width="389">
+
+            <Border.Effect>
+                <DropShadowEffect Color="{Binding Color, Source={StaticResource BorderBrush}}" 
+                                  ShadowDepth="0" 
+                                  BlurRadius="20" 
+                                  Opacity="1" />
+            </Border.Effect>
+
+            <StackPanel Orientation="Vertical">
+                <TextBlock Text="{x:Static language:Lang.GlobalSignUp}" 
+                           Style="{StaticResource TitleTextBlock}"
+                           Margin="0,0,0,25"/>
+
+                <TextBlock Text="{x:Static language:Lang.GlobalName}" 
+                           FontSize="16" 
+                           Margin="0,0,0,8"
+                           Foreground="{StaticResource PrimaryTextBrush}"/>
+
+                <Border CornerRadius="5" 
+                        BorderThickness="1" 
+                        BorderBrush="{StaticResource TextBoxBorderBrush}"
+                        Background="Transparent">
+
+                    <Border.Effect>
+                        <DropShadowEffect Color="{Binding Color, Source={StaticResource TextBoxBorderBrush}}" 
+                                          ShadowDepth="0" 
+                                          BlurRadius="10" 
+                                          Opacity="0.9" />
+                    </Border.Effect>
+
+                    <TextBox x:Name="txtBoxName" 
+                             Padding="8" 
+                             FontSize="16"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Foreground="{StaticResource PrimaryTextBrush}"
+                             CaretBrush="{StaticResource PrimaryTextBrush}"
+                             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </Border>
+                <TextBlock Text="{x:Static language:Lang.GlobalLastName}" 
+                           FontSize="16" 
+                           Margin="0,15,0,8"
+                           Foreground="{StaticResource PrimaryTextBrush}"/>
+
+                <Border CornerRadius="5" 
+                        BorderThickness="1" 
+                        BorderBrush="{StaticResource TextBoxBorderBrush}"
+                        Background="Transparent">
+
+                    <Border.Effect>
+                        <DropShadowEffect Color="{Binding Color, Source={StaticResource TextBoxBorderBrush}}" 
+                                          ShadowDepth="0" 
+                                          BlurRadius="10" 
+                                          Opacity="0.9" />
+                    </Border.Effect>
+
+                    <TextBox x:Name="txtBoxLastname" 
+                             Padding="8" 
+                             FontSize="16" 
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Foreground="{StaticResource PrimaryTextBrush}"
+                             CaretBrush="{StaticResource PrimaryTextBrush}"
+                             Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged}"/>
+                </Border>
+                <TextBlock Text="{x:Static language:Lang.GlobalNickname}" 
+                           FontSize="16" 
+                           Margin="0,15,0,8"
+                           Foreground="{StaticResource PrimaryTextBrush}"/>
+
+                <Border CornerRadius="5" 
+                        BorderThickness="1" 
+                        BorderBrush="{StaticResource TextBoxBorderBrush}"
+                        Background="Transparent">
+
+                    <Border.Effect>
+                        <DropShadowEffect Color="{Binding Color, Source={StaticResource TextBoxBorderBrush}}" 
+                                          ShadowDepth="0" 
+                                          BlurRadius="10" 
+                                          Opacity="0.9" />
+                    </Border.Effect>
+
+                    <TextBox x:Name="txtBxNickname" 
+                             Padding="8" 
+                             FontSize="16" 
+                             BorderThickness="0"
+                             Background="Transparent"
+                             Foreground="{StaticResource PrimaryTextBrush}"
+                             CaretBrush="{StaticResource PrimaryTextBrush}"
+                             Text="{Binding Nickname, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Border>
+                
+                    <Button Margin="0,30,0,10" Height="43" Width="168" 
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Command="{Binding RegisterPlayerCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+
+                        <TextBlock Text="{x:Static language:Lang.GlobalAccept}" 
+                                   FontSize="16" 
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+                    </Button>
+
+                    <Button Style="{StaticResource NoFocusButtonStyle}" Margin="0,10,0,0"
+                        Command="{Binding NavigateToSignUpCommand}"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                        <TextBlock Text="{x:Static language:Lang.GlobalBack}"
+                               Foreground="{StaticResource ForgotPasswordTextBrush}"
+                               FontSize="14"/>
+                    </Button>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

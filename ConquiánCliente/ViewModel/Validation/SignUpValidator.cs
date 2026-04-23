@@ -1,0 +1,171 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using ConquiánCliente.Properties.Langs;
+
+namespace ConquiánCliente.ViewModel.Validation
+{
+    public static class SignUpValidator
+    {
+        private static readonly TimeSpan RegexTimeout = TimeSpan.FromMilliseconds(250);
+        private const string NAME_PATTERN = @"^[a-zA-Z\s]+$";
+        private const string LAST_NAME_PATTERN = @"^[a-zA-Z\s]+$";
+        private const string NICKNAME_PATTERN = @"^[a-zA-Z0-9]+$";
+        private const string EMAIL_PATTERN = @"^[^@\s]+@[^@\s]+\.[^@\s]{2,}$";
+        private const string UPPERCASE_PATTERN = @"[A-Z]";
+        private const string SPECIAL_CHAR_PATTERN = @"[!@#$%^&*()_+\-=\[\]{};':""\\|,.<>\/?]";
+        private const string NUMBER_VERIFICATION_CODE_PATTER = @"^[0-9]{6}$";
+
+        private const int MAX_NAME_LENGTH = 25;
+        private const int MAX_LAST_NAME_LENGTH = 50;
+        private const int MAX_NICKNAME_LENGTH = 15;
+        private const int MAX_EMAIL_LENGTH = 45;
+        private const int MIN_PASSWORD_LENGTH = 8;
+        private const int MAX_PASSWORD_LENGTH = 15;
+
+
+        private static bool IsMatchWithTimeout(string input, string pattern)
+        {
+            bool isMatch;
+
+            try
+            {
+                isMatch = Regex.IsMatch(input, pattern, RegexOptions.None, RegexTimeout);
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                isMatch = false;
+            }
+            return isMatch;
+        }
+        public static string ValidateName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                return Lang.ErrorNameEmpty;
+            }
+            name = name.Trim();
+            if (name.Length > MAX_NAME_LENGTH)
+            {
+                return string.Format(Lang.ErrorNameLength, MAX_NAME_LENGTH);
+            }
+            if (!IsMatchWithTimeout(name, NAME_PATTERN))
+            {
+                return Lang.ErrorValidName;
+            }
+
+            return string.Empty;
+        }
+
+        public static string ValidateCodeVerification(string codeVerification)
+        {
+            if (!IsMatchWithTimeout(codeVerification, NUMBER_VERIFICATION_CODE_PATTER))
+            {
+                return Lang.ErrorVerificationCodeIncorrect;
+            }
+            return string.Empty;
+        }
+
+        public static string ValidateLastName(string lastName)
+        {
+            if (string.IsNullOrEmpty(lastName))
+            {
+                return Lang.ErrorLastNameEmpty;
+            }
+            lastName = lastName.Trim();
+
+            if (lastName.Length > MAX_LAST_NAME_LENGTH)
+            {
+                return string.Format(Lang.ErrorLastNameLength, MAX_LAST_NAME_LENGTH);
+            }
+
+            if (!IsMatchWithTimeout(lastName, LAST_NAME_PATTERN))
+            {
+                return Lang.ErrorLastNameInvalidChars;
+            }
+
+            return string.Empty;
+        }
+
+        public static string ValidateNickname(string nickname)
+        {
+            if (string.IsNullOrEmpty(nickname))
+            {
+                return Lang.ErrorNicknameEmpty;
+            }
+            nickname = nickname.Trim();
+            if (nickname.Length > MAX_NICKNAME_LENGTH)
+            {
+                return string.Format(Lang.ErrorNicknameLength, MAX_NICKNAME_LENGTH);
+            }
+
+            if (!IsMatchWithTimeout(nickname, NICKNAME_PATTERN))
+            {
+                return Lang.ErrorNicknameInvalidChars;
+            }
+
+            return string.Empty;
+        }
+
+        public static string ValidateEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return Lang.ErrorEmailEmpty;
+            }
+            email = email.Trim();
+            if (email.Length > MAX_EMAIL_LENGTH)
+            {
+                return string.Format(Lang.ErrorEmailLenght, MAX_EMAIL_LENGTH);
+            }
+
+            if (!IsMatchWithTimeout(email, EMAIL_PATTERN))
+            {
+                return Lang.ErrorEmailInvalidFormat;
+            }
+
+            return string.Empty;
+        }
+
+        public static string ValidatePassword(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                return Lang.ErrorPasswordEmpty;
+            }
+
+            if (password.Length < MIN_PASSWORD_LENGTH || password.Length > MAX_PASSWORD_LENGTH)
+            {
+                return string.Format(Lang.ErrorPasswordLength, MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH);
+            }
+
+            if (password.Contains(" "))
+            {
+                return Lang.ErrorPasswordNoSpaces;
+            }
+
+            if (!IsMatchWithTimeout(password, UPPERCASE_PATTERN))
+            {
+                return Lang.ErrorPasswordNoUppercase;
+            }
+
+            if (!IsMatchWithTimeout(password, SPECIAL_CHAR_PATTERN))
+            {
+                return Lang.ErrorPasswordNoSpecialChar;
+            }
+
+            return string.Empty;
+        }
+        public static string ValidateConfirmPassword(string password, string confirmPassword)
+        {
+            if (password != confirmPassword)
+            {
+                return Lang.ErrorPasswordMismatch;
+            }
+            return string.Empty;
+        }
+    }
+}

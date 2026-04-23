@@ -1,0 +1,289 @@
+﻿<Page x:Class="ConquiánCliente.View.Profile.UserProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:ConquiánCliente.View.Profile"
+      xmlns:language="clr-namespace:ConquiánCliente.Properties.Langs"
+      xmlns:profile="clr-namespace:ConquiánCliente.ViewModel.Profile"
+      mc:Ignorable="d" 
+      Title="UserProfilePage"
+      Background="Transparent">
+
+    <Page.DataContext>
+        <profile:UserProfileViewModel/>
+    </Page.DataContext>
+
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <profile:ResultStatusConverter x:Key="ResultStatusConverter"/>
+    </Page.Resources>
+
+    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="2"
+                Background="{StaticResource PrimaryBackgroundBrush}"
+                CornerRadius="10"
+                Padding="35"
+                MaxWidth="600" MinWidth="550">
+
+            <Border.Effect>
+                <DropShadowEffect Color="{Binding Color, Source={StaticResource BorderBrush}}" 
+                                  ShadowDepth="0" 
+                                  BlurRadius="20" 
+                                  Opacity="1"/>
+            </Border.Effect>
+
+            <StackPanel Orientation="Vertical">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="7" 
+                                Orientation="Vertical" 
+                                VerticalAlignment="Top" 
+                                Margin="0,0,20,0">
+
+                        <Button Command="{Binding NavigateToEditProfilePictureCommand}"
+                                Style="{StaticResource NoFocusButtonStyle}"
+                                HorizontalAlignment="Center">
+                            <Border Width="100" Height="100"                                     
+                                    BorderBrush="{StaticResource PrimaryButtonBrush}" 
+                                    BorderThickness="2" 
+                                    CornerRadius="5">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="{Binding Color, Source={StaticResource PrimaryButtonBrush}}" 
+                                                      ShadowDepth="0" 
+                                                      BlurRadius="10" 
+                                                      Opacity="0.9" />
+                                </Border.Effect>
+                                <Image Source="{Binding ProfileImagePath}" Stretch="UniformToFill" />
+                            </Border>
+                        </Button>
+
+                        <TextBlock Text="{Binding RankName}" 
+                                   Foreground="#FFD700" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   FontStyle="Italic"
+                                   HorizontalAlignment="Center" 
+                                   TextAlignment="Center"
+                                   Margin="0,15,0,0">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Color="Black" BlurRadius="4" ShadowDepth="2" Opacity="0.6"/>
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </StackPanel>
+
+                    <Label Grid.Row="0" Grid.Column="1" Content="{x:Static language:Lang.GlobalLevel}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                    <TextBlock Text="{Binding Level}" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Label Grid.Row="1" Grid.Column="1" Content="{x:Static language:Lang.GlobalPoints}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                    <TextBlock Text="{Binding PointsDisplay}" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Label Grid.Row="2" Grid.Column="1" Content="{x:Static language:Lang.GlobalNickname}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                    <TextBlock Text="{Binding Nickname}" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Label Grid.Row="3" Grid.Column="1" Content="{x:Static language:Lang.GlobalName}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                    <TextBlock Text="{Binding Name}" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Label Grid.Row="4" Grid.Column="1" Content="{x:Static language:Lang.GlobalLastName}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                    <TextBlock Text="{Binding LastName}" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Label Grid.Row="5" Grid.Column="1" Content="{x:Static language:Lang.GlobalEmail}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                    <TextBlock Text="{Binding Email}" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Label Grid.Row="6" Grid.Column="1" Content="{x:Static language:Lang.GlobalPassword}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+                    <TextBlock Text="********" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Label Grid.Row="8" Grid.Column="1" Content="{x:Static language:Lang.GlobalSocial}" FontWeight="Bold" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}"/>
+
+                    <Image Source="/Resources/facebook.png" x:Name="FacebookIcon" Grid.Row="9" Grid.Column="1" Width="24" Height="24" Margin="10,5"/>
+                    <TextBlock x:Name="txtBxFacebook" Text="{Binding Facebook}" Grid.Row="9" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+
+                    <Image Source="/Resources/instagram.png" x:Name="InstagramIcon" Grid.Row="10" Grid.Column="1" Width="24" Height="24" Margin="10,5"/>
+                    <TextBlock x:Name="txtBxInstagram" Text="{Binding Instagram}" Grid.Row="10" Grid.Column="2" VerticalAlignment="Center" Foreground="{StaticResource PrimaryTextBrush}" Margin="5,0"/>
+                </Grid>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <Button Command="{Binding NavigateToEditCommand}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,10,0,0" Width="165" Height="40">
+                        <TextBlock Text="{x:Static language:Lang.EditDataEdit}" 
+                                   FontSize="16" 
+                                   FontWeight="Bold" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Center"/>
+                    </Button>
+
+                    <Button Style="{StaticResource NoFocusButtonStyle}"
+                            Margin="0,15,0,0"
+                            Command="{Binding NavigateBackCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Page}}">
+                        <TextBlock Text="{x:Static language:Lang.GlobalBack}"
+                                   Foreground="{StaticResource ForgotPasswordTextBrush}" 
+                                   FontSize="14"/>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="2"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="2"
+                Background="{StaticResource PrimaryBackgroundBrush}"
+                CornerRadius="10"
+                Padding="20"
+                Width="420"
+                VerticalAlignment="Stretch">
+
+            <Border.Effect>
+                <DropShadowEffect Color="{Binding Color, Source={StaticResource BorderBrush}}" 
+                                  ShadowDepth="0" 
+                                  BlurRadius="20" 
+                                  Opacity="1"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="{x:Static language:Lang.ProfileMatchHistory}" 
+                           Foreground="{StaticResource PrimaryTextBrush}"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center"
+                           Margin="0,0,0,25"
+                           Effect="{x:Null}"/>
+
+                <ListView Grid.Row="1"
+                          ItemsSource="{Binding MatchHistoryList}" 
+                          Background="Transparent" 
+                          BorderThickness="0"
+                          HorizontalContentAlignment="Stretch"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          MaxHeight="350">
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BorderBrush="{StaticResource PrimaryButtonBrush}" 
+                                    BorderThickness="0,0,0,1" 
+                                    Padding="10,12" 
+                                    Margin="0,0,0,8"
+                                    Background="#1AFFFFFF" 
+                                    CornerRadius="5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" MinWidth="110"/>
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Left">
+                                        <TextBlock Text="{x:Static language:Lang.GamePlayer}" 
+                                                   Foreground="{StaticResource PrimaryTextBrush}" 
+                                                   FontSize="11" 
+                                                   Opacity="0.6"
+                                                   FontWeight="SemiBold"/>
+                                        
+                                        <TextBlock Text="{Binding PlayerName}" 
+                                                   Foreground="{StaticResource PrimaryTextBrush}" 
+                                                   FontSize="14"
+                                                   FontWeight="Bold"
+                                                   Margin="0,0,0,0"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxWidth="110"/>
+
+                                        <TextBlock Text="{Binding PointsEarned, StringFormat='+{0} pts'}" 
+                                                   Foreground="#90EE90" 
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   Margin="0,2,0,0"/>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="1" 
+                                                VerticalAlignment="Center" 
+                                                HorizontalAlignment="Center"
+                                                Orientation="Vertical">
+
+                                        <TextBlock Text="{Binding ResultStatus, Converter={StaticResource ResultStatusConverter}}" 
+                                                   Foreground="{StaticResource SecondaryButtonBrush}" 
+                                                   FontWeight="Bold"
+                                                   FontSize="18"
+                                                   HorizontalAlignment="Center"
+                                                   TextAlignment="Center"/>
+
+                                        <TextBlock Text="{Binding GameMode}"
+                                                   Foreground="{StaticResource PrimaryTextBrush}"
+                                                   FontSize="11"
+                                                   FontWeight="Normal"
+                                                   Opacity="0.7"
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0,2,0,0"/>
+
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,2,0,0" Opacity="0.6">
+                                            <TextBlock Text="⏱ " Foreground="{StaticResource PrimaryTextBrush}" FontSize="10"/>
+                                            <TextBlock Text="{Binding GameTime}" 
+                                                       Foreground="{StaticResource PrimaryTextBrush}"
+                                                       FontSize="10"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                        <TextBlock Text="{x:Static language:Lang.GameOpponent}" 
+                                                   Foreground="{StaticResource PrimaryTextBrush}" 
+                                                   FontSize="11" 
+                                                   Opacity="0.6"
+                                                   FontWeight="SemiBold"
+                                                   HorizontalAlignment="Right"/>
+                                        
+                                        <TextBlock Text="{Binding OpponentName}" 
+                                                   Foreground="{StaticResource PrimaryTextBrush}" 
+                                                   FontSize="14"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Right"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   MaxWidth="100"
+                                                   ToolTip="{Binding OpponentName}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <TextBlock Grid.Row="1"
+                           Text="{x:Static language:Lang.ProfileNoRecentMatches}"
+                           Foreground="{StaticResource ForgotPasswordTextBrush}"
+                           FontSize="16"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Visibility="{Binding IsHistoryEmpty, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

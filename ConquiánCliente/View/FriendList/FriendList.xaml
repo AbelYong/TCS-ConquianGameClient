@@ -1,0 +1,264 @@
+﻿<Window x:Class="ConquiánCliente.View.FriendList.FriendList"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ConquiánCliente.View"
+        xmlns:language="clr-namespace:ConquiánCliente.Properties.Langs"
+        xmlns:friendListVM="clr-namespace:ConquiánCliente.ViewModel.FriendList" 
+        mc:Ignorable="d"
+        Title="{x:Static language:Lang.FriendList}" Height="1080" Width="1920"
+        WindowState="Maximized"
+        WindowStartupLocation="CenterScreen"
+        Background="Transparent">
+
+    <Window.Resources>
+        <friendListVM:StatusConverter x:Key="StatusConverter"/>
+
+        <Style x:Key="CellTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+        </Style>
+
+        <Style TargetType="DataGridCell">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridCell">
+                        <Border Padding="{TemplateBinding Padding}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="0" 
+                                Background="{TemplateBinding Background}" 
+                                SnapsToDevicePixels="True">
+                            <ContentPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridRow">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBoxBorderBrush}"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1A7edefb"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryButtonBrush}"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBoxBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Border Background="{StaticResource PrimaryBackgroundBrush}" />
+        <Image Source="/Resources/background.jpg" 
+               Stretch="UniformToFill" 
+               Opacity="0.5"/>
+
+        <Border BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="2"
+                Background="{StaticResource PrimaryBackgroundBrush}"
+                CornerRadius="10"
+                Padding="35"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                MaxWidth="900" MinWidth="800" Height="650">
+
+            <Border.Effect>
+                <DropShadowEffect Color="{Binding Color, Source={StaticResource BorderBrush}}" 
+                                  ShadowDepth="0" 
+                                  BlurRadius="20" 
+                                  Opacity="1"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0" Text="{x:Static language:Lang.MainMenuFriends}"
+                           Style="{StaticResource TitleTextBlock}"
+                           Margin="0,0,0,20"/>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" 
+                            CornerRadius="5" 
+                            BorderThickness="1" 
+                            BorderBrush="{StaticResource TextBoxBorderBrush}" 
+                            Margin="0,0,10,0"
+                            Background="Transparent">
+
+                        <Border.Effect>
+                            <DropShadowEffect Color="{Binding Color, Source={StaticResource TextBoxBorderBrush}}" 
+                                              ShadowDepth="0" 
+                                              BlurRadius="10" 
+                                              Opacity="0.9" />
+                        </Border.Effect>
+
+                        <TextBox x:Name="txtBXSearchFriend" 
+                                 MaxLength="15"
+                                 Padding="8" 
+                                 FontSize="16" 
+                                 BorderThickness="0" 
+                                 Background="Transparent"
+                                 Foreground="{StaticResource PrimaryTextBrush}"
+                                 CaretBrush="{StaticResource PrimaryTextBrush}"/>
+                    </Border>
+
+                    <Button Grid.Column="1" Margin="5,0" Style="{StaticResource SecondaryButtonStyle}" Width="120" Height="40" Click="SearchButtonClick" x:Name="SearchButton" >
+                        <TextBlock Text= "{x:Static language:Lang.FriendListSearch}"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <DataGrid x:Name="FriendsDataGrid" 
+                              ItemsSource="{Binding Friends}" 
+                              AutoGenerateColumns="False" 
+                              IsReadOnly="True" 
+                              Margin="0,20,0,0"
+                              Background="Transparent" 
+                              BorderThickness="0"
+                              GridLinesVisibility="None"
+                              HeadersVisibility="Column"
+                              RowBackground="Transparent">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{x:Static language:Lang.GlobalNickname}" 
+                                                Binding="{Binding Nickname}" 
+                                                Width="*"
+                                                ElementStyle="{StaticResource CellTextStyle}"/>
+
+                            <DataGridTextColumn Header="{x:Static language:Lang.GlobalLevel}" 
+                                                Binding="{Binding Level}" 
+                                                Width="100"
+                                                ElementStyle="{StaticResource CellTextStyle}"/>
+
+                            <DataGridTextColumn Header="{x:Static language:Lang.FrienListStatus}" 
+                                                Binding="{Binding StatusText}" 
+                                                Width="120"
+                                                ElementStyle="{StaticResource CellTextStyle}"/>
+
+                            <DataGridTemplateColumn Header="{x:Static language:Lang.FriendListAccions}" Width="250">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+                                            <Button Content="{x:Static language:Lang.FriendListViewProfile}"
+                                                    Command="{Binding DataContext.ViewProfileCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource PrimaryButtonStyle}"
+                                                    Width="90"
+                                                    Margin="0,0,10,0"/>
+
+                                            <Button Content="{x:Static language:Lang.FriendsOptionsDelete}"
+                                                    Command="{Binding DataContext.DeleteFriendCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Width="90"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <DataGrid x:Name="SearchDataGrid" ItemsSource="{Binding SearchResult}" AutoGenerateColumns="False" IsReadOnly="True" Visibility="Collapsed" Margin="0,20,0,0"
+                              Background="Transparent" BorderThickness="0" GridLinesVisibility="None" HeadersVisibility="Column" RowBackground="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="{x:Static language:Lang.GlobalNickname}" 
+                                                Binding="{Binding Nickname}" 
+                                                Width="*"
+                                                ElementStyle="{StaticResource CellTextStyle}"/>
+
+                            <DataGridTemplateColumn Header="{x:Static language:Lang.FriendListAccions}" Width="220">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Content="{x:Static language:Lang.FriendListViewProfile}"
+                                                    Command="{Binding DataContext.ViewProfileCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                                    Margin="5"
+                                                    Style="{StaticResource PrimaryButtonStyle}"
+                                                    Width="90"/>
+
+                                            <Button Content="{x:Static language:Lang.FriendListAdd}"
+                                                    Command="{Binding DataContext.AddFriendCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                    CommandParameter="{Binding}"
+                                                    Margin="5"
+                                                    Style="{StaticResource SecondaryButtonStyle}"
+                                                    Width="90"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+
+                <Grid Grid.Row="3" Margin="0,15,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Style="{StaticResource PrimaryButtonStyle}" Width="140" Height="40"
+                            Command="{Binding RequestsCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}">
+                        <TextBlock Text="{x:Static language:Lang.FriendListRequests}"
+                                   FontSize="14"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"/>
+                    </Button>
+
+                    <Button Grid.Column="2" Content="{x:Static language:Lang.GlobalBack}"
+                            Foreground="{StaticResource ForgotPasswordTextBrush}"
+                            FontSize="14"
+                            HorizontalAlignment="Right"
+                            Command="{Binding BackCommand}"
+                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

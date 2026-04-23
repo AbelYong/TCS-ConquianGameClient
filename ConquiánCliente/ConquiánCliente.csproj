@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<RootNamespace>ConquiánCliente</RootNamespace>
+		<AssemblyName>ConquiánCliente</AssemblyName>
+		<Nullable>disable</Nullable>
+		<UseWPF>true</UseWPF>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="EntityFramework" Version="6.5.1" />
+		<PackageReference Include="System.ServiceModel.Http" Version="6.0.0" />
+		<PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0" />
+		<PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
+		<PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="System.ServiceModel" />
+	</ItemGroup>
+</Project>

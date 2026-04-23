@@ -1,0 +1,127 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.Enums" />
+  <xs:complexType name="GameStateDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="CurrentTurnPlayerId" type="xs:int" />
+      <xs:element minOccurs="0" name="Opponent" nillable="true" type="tns:PlayerDto" />
+      <xs:element minOccurs="0" name="OpponentCardCount" type="xs:int" />
+      <xs:element minOccurs="0" name="PlayerHand" nillable="true" type="tns:ArrayOfCardDto" />
+      <xs:element minOccurs="0" name="TopDiscardCard" nillable="true" type="tns:CardDto" />
+      <xs:element minOccurs="0" name="TotalGameSeconds" type="xs:int" />
+      <xs:element minOccurs="0" name="TurnRemainingSeconds" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GameStateDto" nillable="true" type="tns:GameStateDto" />
+  <xs:complexType name="PlayerDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="PointsToNextLevel" type="xs:int" />
+      <xs:element minOccurs="0" name="RankName" nillable="true" type="xs:string" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.Enums" minOccurs="0" name="Status" type="q1:PlayerStatus" />
+      <xs:element minOccurs="0" name="currentPoints" type="xs:int" />
+      <xs:element minOccurs="0" name="email" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="idLevel" type="xs:int" />
+      <xs:element minOccurs="0" name="idPlayer" type="xs:int" />
+      <xs:element minOccurs="0" name="lastName" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="nickname" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="pathPhoto" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PlayerDto" nillable="true" type="tns:PlayerDto" />
+  <xs:complexType name="ArrayOfCardDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CardDto" nillable="true" type="tns:CardDto" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfCardDto" nillable="true" type="tns:ArrayOfCardDto" />
+  <xs:complexType name="CardDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="Id" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ImagePath" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Rank" type="xs:int" />
+      <xs:element minOccurs="0" name="Suit" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="CardDto" nillable="true" type="tns:CardDto" />
+  <xs:complexType name="ServiceFaultDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ErrorType" type="tns:ServiceErrorType" />
+      <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Target" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ServiceFaultDto" nillable="true" type="tns:ServiceFaultDto" />
+  <xs:simpleType name="ServiceErrorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unknown" />
+      <xs:enumeration value="DatabaseError" />
+      <xs:enumeration value="DuplicateRecord" />
+      <xs:enumeration value="ValidationFailed" />
+      <xs:enumeration value="NotFound" />
+      <xs:enumeration value="OperationFailed" />
+      <xs:enumeration value="CommunicationError" />
+      <xs:enumeration value="ServerInternalError" />
+      <xs:enumeration value="UserNotFound" />
+      <xs:enumeration value="InvalidPassword" />
+      <xs:enumeration value="SessionActive" />
+      <xs:enumeration value="GuestInviteUsed" />
+      <xs:enumeration value="RegisteredUserAsGuest" />
+      <xs:enumeration value="LobbyFull" />
+      <xs:enumeration value="GameInProgress" />
+      <xs:enumeration value="InvalidEmailFormat" />
+      <xs:enumeration value="InvalidPasswordFormat" />
+      <xs:enumeration value="InvalidNameFormat" />
+      <xs:enumeration value="InvalidVerificationCode" />
+      <xs:enumeration value="VerificationCodeExpired" />
+      <xs:enumeration value="GameNotFound" />
+      <xs:enumeration value="NotYourTurn" />
+      <xs:enumeration value="MustDiscardToFinish" />
+      <xs:enumeration value="AlreadyDrawn" />
+      <xs:enumeration value="PendingDiscardAction" />
+      <xs:enumeration value="DeckEmpty" />
+      <xs:enumeration value="InvalidMeld" />
+      <xs:enumeration value="CardNotFound" />
+      <xs:enumeration value="InvalidCardAction" />
+      <xs:enumeration value="GameRuleViolation" />
+      <xs:enumeration value="EmptyDiscaard" />
+      <xs:enumeration value="LobbyNotFound" />
+      <xs:enumeration value="UserOffline" />
+      <xs:enumeration value="InvitationFailed" />
+      <xs:enumeration value="ExistingRequest" />
+      <xs:enumeration value="HostUserNotFound" />
+      <xs:enumeration value="NotEnoughPlayers" />
+      <xs:enumeration value="NotLobbyHost" />
+      <xs:enumeration value="NotKickYourSelf" />
+      <xs:enumeration value="RegisteredMail" />
+      <xs:enumeration value="UserInGame" />
+      <xs:enumeration value="PlayerBanned" />
+      <xs:enumeration value="UserInLobby" />
+      <xs:enumeration value="OpponentConnectionLost" />
+      <xs:enumeration value="RoomNotFound" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ServiceErrorType" nillable="true" type="tns:ServiceErrorType" />
+  <xs:complexType name="GameResultDto">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="DurationSeconds" type="xs:int" />
+      <xs:element minOccurs="0" name="ErrorSavingToDatabase" type="xs:boolean" />
+      <xs:element minOccurs="0" name="GamemodeId" type="xs:int" />
+      <xs:element minOccurs="0" name="IsDraw" type="xs:boolean" />
+      <xs:element minOccurs="0" name="LoserId" type="xs:int" />
+      <xs:element minOccurs="0" name="Player1Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Player1Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Player1PathPhoto" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Player1Score" type="xs:int" />
+      <xs:element minOccurs="0" name="Player2Id" type="xs:int" />
+      <xs:element minOccurs="0" name="Player2Name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Player2PathPhoto" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="Player2Score" type="xs:int" />
+      <xs:element minOccurs="0" name="PointsWon" type="xs:int" />
+      <xs:element minOccurs="0" name="RoomCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="WinnerId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GameResultDto" nillable="true" type="tns:GameResultDto" />
+</xs:schema>

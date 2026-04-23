@@ -1,0 +1,179 @@
+﻿using ConquiánCliente.Properties.Langs;
+using ConquiánCliente.ServiceLogin;
+using ConquiánCliente.Utilities;
+using ConquiánCliente.View.Lobby;
+using ConquiánCliente.ViewModel;
+using ConquiánCliente.ViewModel.Lobby;
+using System;
+using System.Configuration;
+using System.Globalization;
+using System.Linq;
+using System.ServiceModel;
+using System.Threading;
+using System.Windows;
+
+namespace ConquiánCliente
+{
+    public partial class App : Application
+    {
+        private NetworkConnectionMonitor networkMonitor;
+
+        public App()
+        {
+            this.Exit += AppExit;
+        }
+
+        private static void AppExit(object sender, ExitEventArgs e)
+        {
+            if (PlayerSession.IsLoggedIn && PlayerSession.CurrentPlayer != null)
+            {
+                try
+                {
+                    var loginClient = new LoginClient();
+                    loginClient.SignOutPlayerAsync(PlayerSession.CurrentPlayer.idPlayer).GetAwaiter().GetResult();
+                    PresenceClientManager.Instance.Client.Unsubscribe(PlayerSession.CurrentPlayer.idPlayer);
+                    InvitationClientManager.Disconnect(PlayerSession.CurrentPlayer.idPlayer);
+                    PlayerSession.EndSession();
+                    AudioManager.Instance.StopMusic();
+                }
+                catch (CommunicationException commEx)
+                {
+                    Console.WriteLine($"Error de comunicación al desconectar: {commEx.Message}");
+                }
+                catch (TimeoutException timeoutEx)
+                {
+                    Console.WriteLine($"Tiempo de espera agotado al desconectar: {timeoutEx.Message}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error inesperado al desconectar: {ex.Message}");
+                }
+            }
+        }
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            networkMonitor = new NetworkConnectionMonitor();
+            networkMonitor.OnNetworkStatusLost += HandleNetworkLost;
+            networkMonitor.OnNetworkStatusRestored += HandleNetworkRestored;
+
+            var settings = ConquiánCliente.Properties.Settings.Default;
+
+            if (string.IsNullOrEmpty(settings.languageCode))
+            {
+                var osLanguage = CultureInfo.InstalledUICulture.TwoLetterISOLanguageName;
+
+                if (osLanguage == "es")
+                {
+                    settings.languageCode = "es-MX";
+                }
+                else
+                {
+                    settings.languageCode = "en-US";
+                }
+
+                settings.Save();
+            }
+
+            var langCode = settings.languageCode;
+            var culture = new CultureInfo(langCode);
+
+            Thread.CurrentThread.CurrentUICulture = culture;
+            Thread.CurrentThread.CurrentCulture = culture;
+
+            try
+            {
+                double savedVolume = settings.MusicVolume;
+
+                AudioManager.Instance.SetVolume(savedVolume);
+                AudioManager.Instance.PlayMenuMusic();
+            }
+            catch (SettingsPropertyNotFoundException ex)
+            {
+                Console.WriteLine($"No se encontró la configuración de volumen, usando valor por defecto: {ex.Message}");
+
+                AudioManager.Instance.SetVolume(50);
+                AudioManager.Instance.PlayMenuMusic();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al inicializar el sistema de audio: {ex.Message}");
+            }
+            InvitationCallbackHandler.OnGlobalInvitationReceived += ShowInvitationPopup;
+            base.OnStartup(e);
+        }
+
+        private void HandleNetworkLost()
+        {
+            this.Dispatcher.Invoke(() =>
+            {
+                if (!PlayerSession.IsLoggedIn)
+                {
+                    return;
+                }
+                PlayerSession.IsNetworkDown = true;
+
+                MessageBox.Show(Lang.ErrorLostConnection, Lang.ErrorConnectingToServer, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+
+                NavigateToLogin();
+            });
+        }
+
+        private void HandleNetworkRestored()
+        {
+            this.Dispatcher.Invoke(() =>
+            { 
+                PlayerSession.IsNetworkDown = false;
+            });
+        }
+
+        private static void NavigateToLogin()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                PlayerSession.EndSession();
+
+                LogIn loginWindow = new LogIn();
+
+                var windowsToClose = Application.Current.Windows.Cast<Window>()
+                    .Where(w => w != loginWindow)
+                    .ToList();
+
+                foreach (Window window in windowsToClose)
+                {
+                    if (window.DataContext is ConquiánCliente.ViewModel.Game.GameViewModel gvm)
+                    {
+                        gvm.Cleanup();
+                    }
+                    window.Close();
+                }
+
+                loginWindow.Show();
+                Application.Current.MainWindow = loginWindow;
+                PlayerSession.IsNetworkDown = false;
+            });
+        }
+
+        private static void ShowInvitationPopup(string senderNickname, string roomCode)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                foreach (Window window in Application.Current.Windows)
+                {
+                    if (window is InvitationReceived)
+                    {
+                        return;
+                    }
+                }
+
+                var vm = new InvitationReceivedViewModel(senderNickname, roomCode);
+
+                var invitationWindow = new InvitationReceived();
+
+                invitationWindow.DataContext = vm;
+
+                invitationWindow.Show();
+            });
+        }
+    }
+}

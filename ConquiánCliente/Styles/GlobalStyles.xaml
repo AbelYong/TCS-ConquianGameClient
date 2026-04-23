@@ -1,0 +1,162 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#0b0832"/>
+
+    <SolidColorBrush x:Key="PrimaryTextBrush" Color="#EAEAEA"/>
+
+    <SolidColorBrush x:Key="PrimaryColorBrush" Color="#ff2d60"/>
+    <SolidColorBrush x:Key="PrimaryButtonBrush" Color="#7edefb"/>
+    <SolidColorBrush x:Key="SecondaryButtonBrush" Color="#fbf928"/>
+
+    <SolidColorBrush x:Key="BorderBrush" Color="#fbf928"/>
+    <SolidColorBrush x:Key="TextBoxBackgroundBrush" Color="#2A2A2A"/>
+    <SolidColorBrush x:Key="TextBoxBorderBrush" Color="#7edefb"/>
+
+    <SolidColorBrush x:Key="ForgotPasswordTextBrush" Color="#7edefb"/>
+
+    <Style x:Key="TitleTextBlock" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="32"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+
+        <Setter Property="Foreground" Value="{StaticResource PrimaryTextBrush}"/>
+
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="{Binding Color, Source={StaticResource PrimaryColorBrush}}" 
+                                  ShadowDepth="0" 
+                                  BlurRadius="30"                               
+                                  Opacity="1" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+    </Style>
+
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource PrimaryButtonBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource PrimaryButtonBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" CornerRadius="5" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+
+                        <Border.Effect>
+                            <DropShadowEffect Color="{Binding Color, Source={StaticResource PrimaryButtonBrush}}" 
+                                              ShadowDepth="0" 
+                                              BlurRadius="12" 
+                                              Opacity="0.9" />
+                        </Border.Effect>
+
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource PrimaryButtonBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryBackgroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource SecondaryButtonBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource SecondaryButtonBrush}"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="MinWidth" Value="100"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" CornerRadius="5" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+
+                        <Border.Effect>
+                            <DropShadowEffect Color="{Binding Color, Source={StaticResource SecondaryButtonBrush}}" 
+                                              ShadowDepth="0" 
+                                              BlurRadius="12" 
+                                              Opacity="0.9" />
+                        </Border.Effect>
+
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          TextElement.Foreground="{TemplateBinding Foreground}"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource SecondaryButtonBrush}"/>
+                            <Setter Property="Foreground" Value="{StaticResource PrimaryBackgroundBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NoFocusButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChatListBoxStyle" TargetType="ListBox">
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBox">
+                    <Border x:Name="Bd" 
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="1"
+                            SnapsToDevicePixels="true">
+                        <ScrollViewer Focusable="False" Padding="{TemplateBinding Padding}">
+                            <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                        </ScrollViewer>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.5"/>
+                            <Setter TargetName="Bd" Property="Background" Value="Transparent"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

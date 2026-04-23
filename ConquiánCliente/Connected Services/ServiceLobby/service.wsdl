@@ -1,0 +1,376 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="Lobby" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="CustomBinding_ILobby_policy">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <msb:BinaryEncoding xmlns:msb="http://schemas.microsoft.com/ws/06/2004/mspolicy/netbinary1">
+        </msb:BinaryEncoding>
+        <wsrm:RMAssertion xmlns:wsrm="http://schemas.xmlsoap.org/ws/2005/02/rm/policy">
+          <wsrm:InactivityTimeout Milliseconds="90000">
+          </wsrm:InactivityTimeout>
+          <wsrm:AcknowledgementInterval Milliseconds="200">
+          </wsrm:AcknowledgementInterval>
+        </wsrm:RMAssertion>
+        <wsaw:UsingAddressing>
+        </wsaw:UsingAddressing>
+      </wsp:All>
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import namespace="http://tempuri.org/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" />
+      <xsd:import namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.Enums" />
+      <xsd:import namespace="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.FaultContracts" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ILobby_GetLobbyState_InputMessage">
+    <wsdl:part name="parameters" element="tns:GetLobbyState" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_GetLobbyState_OutputMessage">
+    <wsdl:part name="parameters" element="tns:GetLobbyStateResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_GetLobbyState_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q1="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q1:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_CreateLobby_InputMessage">
+    <wsdl:part name="parameters" element="tns:CreateLobby" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_CreateLobby_OutputMessage">
+    <wsdl:part name="parameters" element="tns:CreateLobbyResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_CreateLobby_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q2="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q2:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribe_InputMessage">
+    <wsdl:part name="parameters" element="tns:JoinAndSubscribe" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribe_OutputMessage">
+    <wsdl:part name="parameters" element="tns:JoinAndSubscribeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribe_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q3="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q3:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribeAsGuest_InputMessage">
+    <wsdl:part name="parameters" element="tns:JoinAndSubscribeAsGuest" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribeAsGuest_OutputMessage">
+    <wsdl:part name="parameters" element="tns:JoinAndSubscribeAsGuestResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribeAsGuest_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q4="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q4:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribeAsGuest_GuestInviteUsedFaultFault_FaultMessage">
+    <wsdl:part xmlns:q5="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.FaultContracts" name="detail" element="q5:GuestInviteUsedFault" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_JoinAndSubscribeAsGuest_RegisteredUserAsGuestFaultFault_FaultMessage">
+    <wsdl:part xmlns:q6="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.FaultContracts" name="detail" element="q6:RegisteredUserAsGuestFault" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_LeaveAndUnsubscribe_InputMessage">
+    <wsdl:part name="parameters" element="tns:LeaveAndUnsubscribe" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_SendMessage_InputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessage" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_SendMessage_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SendMessageResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_SelectGamemode_InputMessage">
+    <wsdl:part name="parameters" element="tns:SelectGamemode" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_SelectGamemode_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SelectGamemodeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_SelectGamemode_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q7="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q7:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_StartGame_InputMessage">
+    <wsdl:part name="parameters" element="tns:StartGame" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_StartGame_OutputMessage">
+    <wsdl:part name="parameters" element="tns:StartGameResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_StartGame_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q8="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q8:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_KickPlayer_InputMessage">
+    <wsdl:part name="parameters" element="tns:KickPlayer" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_KickPlayer_OutputMessage">
+    <wsdl:part name="parameters" element="tns:KickPlayerResponse" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_KickPlayer_ServiceFaultDtoFault_FaultMessage">
+    <wsdl:part xmlns:q9="http://schemas.datacontract.org/2004/07/Conqui%C3%A1nServidor.Contracts.DataContracts" name="detail" element="q9:ServiceFaultDto" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_PlayerJoined_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:PlayerJoined" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_PlayerLeft_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:PlayerLeft" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_HostLeft_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:HostLeft" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_MessageReceived_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:MessageReceived" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_NotifyGamemodeChanged_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyGamemodeChanged" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_NotifyGameStarting_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:NotifyGameStarting" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_YouWereKicked_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:YouWereKicked" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_Ping_OutputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="ILobby_Ping_InputCallbackMessage">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ILobby">
+    <wsdl:operation name="GetLobbyState">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/GetLobbyState" message="tns:ILobby_GetLobbyState_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/GetLobbyStateResponse" message="tns:ILobby_GetLobbyState_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/GetLobbyStateServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:ILobby_GetLobbyState_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateLobby">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/CreateLobby" message="tns:ILobby_CreateLobby_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/CreateLobbyResponse" message="tns:ILobby_CreateLobby_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/CreateLobbyServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:ILobby_CreateLobby_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="JoinAndSubscribe">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribe" message="tns:ILobby_JoinAndSubscribe_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribeResponse" message="tns:ILobby_JoinAndSubscribe_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribeServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:ILobby_JoinAndSubscribe_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="JoinAndSubscribeAsGuest">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribeAsGuest" message="tns:ILobby_JoinAndSubscribeAsGuest_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribeAsGuestResponse" message="tns:ILobby_JoinAndSubscribeAsGuest_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribeAsGuestServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:ILobby_JoinAndSubscribeAsGuest_ServiceFaultDtoFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribeAsGuestGuestInviteUsedFaultFault" name="GuestInviteUsedFaultFault" message="tns:ILobby_JoinAndSubscribeAsGuest_GuestInviteUsedFaultFault_FaultMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/JoinAndSubscribeAsGuestRegisteredUserAsGuestFaultFault" name="RegisteredUserAsGuestFaultFault" message="tns:ILobby_JoinAndSubscribeAsGuest_RegisteredUserAsGuestFaultFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="LeaveAndUnsubscribe">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/LeaveAndUnsubscribe" message="tns:ILobby_LeaveAndUnsubscribe_InputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/SendMessage" message="tns:ILobby_SendMessage_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/SendMessageResponse" message="tns:ILobby_SendMessage_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SelectGamemode">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/SelectGamemode" message="tns:ILobby_SelectGamemode_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/SelectGamemodeResponse" message="tns:ILobby_SelectGamemode_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/SelectGamemodeServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:ILobby_SelectGamemode_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="StartGame">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/StartGame" message="tns:ILobby_StartGame_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/StartGameResponse" message="tns:ILobby_StartGame_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/StartGameServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:ILobby_StartGame_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="KickPlayer">
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/KickPlayer" message="tns:ILobby_KickPlayer_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/KickPlayerResponse" message="tns:ILobby_KickPlayer_OutputMessage" />
+      <wsdl:fault wsaw:Action="http://tempuri.org/ILobby/KickPlayerServiceFaultDtoFault" name="ServiceFaultDtoFault" message="tns:ILobby_KickPlayer_ServiceFaultDtoFault_FaultMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PlayerJoined">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/PlayerJoined" message="tns:ILobby_PlayerJoined_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="PlayerLeft">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/PlayerLeft" message="tns:ILobby_PlayerLeft_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="HostLeft">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/HostLeft" message="tns:ILobby_HostLeft_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="MessageReceived">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/MessageReceived" message="tns:ILobby_MessageReceived_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGamemodeChanged">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/NotifyGamemodeChanged" message="tns:ILobby_NotifyGamemodeChanged_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameStarting">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/NotifyGameStarting" message="tns:ILobby_NotifyGameStarting_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="YouWereKicked">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/YouWereKicked" message="tns:ILobby_YouWereKicked_OutputCallbackMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <wsdl:output wsaw:Action="http://tempuri.org/ILobby/Ping" message="tns:ILobby_Ping_OutputCallbackMessage" />
+      <wsdl:input wsaw:Action="http://tempuri.org/ILobby/PingResponse" message="tns:ILobby_Ping_InputCallbackMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomBinding_ILobby" type="tns:ILobby">
+    <wsp:PolicyReference URI="#CustomBinding_ILobby_policy">
+    </wsp:PolicyReference>
+    <soap12:binding transport="http://schemas.microsoft.com/soap/tcp" />
+    <wsdl:operation name="GetLobbyState">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/GetLobbyState" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="CreateLobby">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/CreateLobby" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="JoinAndSubscribe">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/JoinAndSubscribe" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="JoinAndSubscribeAsGuest">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/JoinAndSubscribeAsGuest" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="GuestInviteUsedFaultFault">
+        <soap12:fault use="literal" name="GuestInviteUsedFaultFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="RegisteredUserAsGuestFaultFault">
+        <soap12:fault use="literal" name="RegisteredUserAsGuestFaultFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="LeaveAndUnsubscribe">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/LeaveAndUnsubscribe" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+    <wsdl:operation name="SendMessage">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/SendMessage" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SelectGamemode">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/SelectGamemode" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="StartGame">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/StartGame" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="KickPlayer">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/KickPlayer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ServiceFaultDtoFault">
+        <soap12:fault use="literal" name="ServiceFaultDtoFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="PlayerJoined">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/PlayerJoined" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PlayerLeft">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/PlayerLeft" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="HostLeft">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/HostLeft" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="MessageReceived">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/MessageReceived" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGamemodeChanged">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/NotifyGamemodeChanged" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NotifyGameStarting">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/NotifyGameStarting" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="YouWereKicked">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/YouWereKicked" style="document" />
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap12:operation soapAction="http://tempuri.org/ILobby/Ping" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Lobby">
+    <wsdl:port name="CustomBinding_ILobby" binding="tns:CustomBinding_ILobby">
+      <soap12:address location="net.tcp://localhost:9001/Conqui%C3%A1nServidor/Lobby/" />
+      <wsa10:EndpointReference>
+        <wsa10:Address>net.tcp://localhost:9001/Conqui%C3%A1nServidor/Lobby/</wsa10:Address>
+        <Identity xmlns="http://schemas.xmlsoap.org/ws/2006/02/addressingidentity">
+          <Dns>localhost</Dns>
+        </Identity>
+      </wsa10:EndpointReference>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="fdfb28c0-4c8e-45f2-a0c0-a7dcf5b1760e" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="net.tcp://localhost:9001/Conqui%C3%A1nServidor/Login/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="63b5b812-e957-422c-aebb-3335539954a6" SourceId="1" SourceUrl="net.tcp://localhost:9001/Conqui%C3%A1nServidor/Login/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="5d74df9a-77c5-4cab-a5fe-ec8603688d5b" SourceId="1" SourceUrl="net.tcp://localhost:9001/Conqui%C3%A1nServidor/Login/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="97db6668-ac87-452d-8267-36e43e80fc1c" SourceId="1" SourceUrl="net.tcp://localhost:9001/Conqui%C3%A1nServidor/Login/mex" />
+    <MetadataFile FileName="Conqui%C3%A1nServidor.Contracts.DataContracts.xsd" MetadataType="Schema" ID="f7edf66d-10eb-4836-a2d1-ca187669b213" SourceId="1" SourceUrl="net.tcp://localhost:9001/Conqui%C3%A1nServidor/Login/mex" />
+    <MetadataFile FileName="Conqui%C3%A1nServidor.Contracts.Enums.xsd" MetadataType="Schema" ID="04728794-8cfd-4f8d-bc16-ce2ae0978feb" SourceId="1" SourceUrl="net.tcp://localhost:9001/Conqui%C3%A1nServidor/Login/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
