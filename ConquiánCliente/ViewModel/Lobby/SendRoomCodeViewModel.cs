@@ -1,6 +1,6 @@
 ﻿using ConquiánCliente.Properties.Langs;
 using ConquiánCliente.View.Lobby;
-using ConquiánCliente.ServiceGuestInvitation;
+using ServiceGuestInvitation;
 using ConquiánCliente.ViewModel.Validation;
 using System;
 using System.Linq;
@@ -124,7 +124,7 @@ namespace ConquiánCliente.ViewModel.Lobby
 
         private void HandleServiceFault(FaultException<ServiceFaultDto> fault)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
             string msg = messageResolver.GetMessage(errorType);
 
             MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Warning);

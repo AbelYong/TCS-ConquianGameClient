@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLogin;
+using ServiceLogin;
 using ConquiánCliente.Utilities;
 using ConquiánCliente.View.Lobby;
 using ConquiánCliente.ViewModel;
@@ -29,9 +29,19 @@ namespace ConquiánCliente
             {
                 try
                 {
-                    var loginClient = new LoginClient();
+                    // --- CAMBIO: Configuramos el cliente HTTP para .NET 8 ---
+                    var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                    var endpoint = new EndpointAddress("http://localhost:8080/login");
+                    var loginClient = new LoginClient(basicBinding, endpoint);
+
                     loginClient.SignOutPlayerAsync(PlayerSession.CurrentPlayer.idPlayer).GetAwaiter().GetResult();
-                    PresenceClientManager.Instance.Client.Unsubscribe(PlayerSession.CurrentPlayer.idPlayer);
+
+                    // --- CAMBIO: Usamos la versión Async de Presence ---
+                    if (PresenceClientManager.Instance.Client != null)
+                    {
+                        PresenceClientManager.Instance.Client.UnsubscribeAsync(PlayerSession.CurrentPlayer.idPlayer).GetAwaiter().GetResult();
+                    }
+
                     InvitationClientManager.Disconnect(PlayerSession.CurrentPlayer.idPlayer);
                     PlayerSession.EndSession();
                     AudioManager.Instance.StopMusic();

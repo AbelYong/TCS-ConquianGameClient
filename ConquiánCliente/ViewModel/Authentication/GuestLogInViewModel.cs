@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLobby;
+using ServiceLobby;
 using ConquiánCliente.View.Lobby;
 using ConquiánCliente.ViewModel.Lobby;
 using System;
@@ -16,7 +16,11 @@ namespace ConquiánCliente.ViewModel.Authentication
     {
         private string email;
         private string roomCode;
-        private readonly LobbyClient lobbyClient;
+
+        // --- 1. CAMBIO AQUÍ: Usamos la interfaz ILobby pura en lugar de LobbyClient ---
+        private readonly ILobby lobbyClient;
+        // -----------------------------------------------------------------------------
+
         private readonly Window currentWindow;
         private bool isLoading;
         private readonly IMessageResolver messageResolver;
@@ -50,7 +54,14 @@ namespace ConquiánCliente.ViewModel.Authentication
             this.messageResolver = new ResourceMessageResolver();
 
             var context = new InstanceContext(LobbyCallbackHandler.Instance);
-            lobbyClient = new LobbyClient(context);
+
+            var tcpBinding = new NetTcpBinding(SecurityMode.None);
+            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+
+            // --- 2. CAMBIO AQUÍ: Usamos DuplexChannelFactory para ignorar el cliente roto ---
+            var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
+            lobbyClient = factory.CreateChannel();
+            // --------------------------------------------------------------------------------
 
             GuestLoginCommand = new RelayCommand(async (param) => await ExecuteGuestLogin(), (param) => CanExecuteGuestLogin());
             NavigateBackCommand = new RelayCommand(ExecuteNavigateBack);
@@ -129,6 +140,7 @@ namespace ConquiánCliente.ViewModel.Authentication
 
         private async Task ProcessLogin()
         {
+            // La llamada al método sigue siendo exactamente igual
             PlayerDto guestPlayer = await lobbyClient.JoinAndSubscribeAsGuestAsync(Email, RoomCode);
 
             if (guestPlayer != null)
@@ -177,10 +189,10 @@ namespace ConquiánCliente.ViewModel.Authentication
 
         private void HandleFaultException(FaultException<ServiceLobby.ServiceFaultDto> fault)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType; // Mapeo entre Enums
             string message = messageResolver.GetMessage(errorType);
 
-            if (errorType == ConquiánCliente.ServiceLogin.ServiceErrorType.RegisteredUserAsGuest)
+            if (errorType == ServiceLogin.ServiceErrorType.RegisteredUserAsGuest)
             {
                 MessageBox.Show(message, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Information);
                 ExecuteNavigateBack(null);

@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.ViewModel.FriendList;
-using ConquiánCliente.ServiceUserProfile;
+using ServiceUserProfile;
 using System.Collections.ObjectModel;
 using System.Windows;
 

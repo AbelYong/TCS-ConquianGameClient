@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLogin;
+using ServiceLogin;
 using ConquiánCliente.View;
 using ConquiánCliente.View.Lobby;
 using ConquiánCliente.View.MainMenu;
@@ -42,18 +42,21 @@ namespace ConquiánCliente.ViewModel.MainMenu
             if (PlayerSession.CurrentPlayer != null)
             {
                 int playerId = PlayerSession.CurrentPlayer.idPlayer;
-                Task.Run(() => AttemptConnectionSetup(playerId));
+                // --- CAMBIO: Esperamos el Task asíncrono ---
+                Task.Run(async () => await AttemptConnectionSetup(playerId));
             }
         }
 
-        private static void AttemptConnectionSetup(int playerId)
+        // --- CAMBIO: Se convirtió a async Task ---
+        private static async Task AttemptConnectionSetup(int playerId)
         {
             try
             {
                 InvitationClientManager.Connect(playerId);
                 if (PresenceClientManager.Instance.Client != null)
                 {
-                    PresenceClientManager.Instance.Client.Subscribe(PlayerSession.CurrentPlayer.idPlayer);
+                    // --- CAMBIO: Usamos SubscribeAsync y await ---
+                    await PresenceClientManager.Instance.Client.SubscribeAsync(PlayerSession.CurrentPlayer.idPlayer);
                 }
             }
             catch (CommunicationException ex)
@@ -122,20 +125,24 @@ namespace ConquiánCliente.ViewModel.MainMenu
 
         private async Task SignOutLoginService(int playerId)
         {
-            var loginClient = new LoginClient();
+            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 ---
+            var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+            var endpoint = new EndpointAddress("http://localhost:8080/login");
+            var loginClient = new LoginClient(basicBinding, endpoint);
+            // ----------------------------------------
             try
             {
                 await loginClient.SignOutPlayerAsync(playerId);
             }
             catch (CommunicationException)
             {
-                 // The server may be unavailable or the network may fail at this point.
+                // The server may be unavailable or the network may fail at this point.
                 // Logout must still complete locally to avoid leaving the client in an inconsistent state.
             }
             catch (TimeoutException)
             {
-                 // A delayed server response during logout is expected in unstable networks.
-                 //Blocking the logout would negatively impact user experience, so the error is ignored.
+                // A delayed server response during logout is expected in unstable networks.
+                //Blocking the logout would negatively impact user experience, so the error is ignored.
             }
         }
 
@@ -150,8 +157,8 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
             catch (CommunicationException)
             {
-                   // Presence unsubscription is a best-effort operation.
-                  // If it fails, the server will eventually clean up stale subscriptions automatically.
+                // Presence unsubscription is a best-effort operation.
+                // If it fails, the server will eventually clean up stale subscriptions automatically.
             }
             catch (TimeoutException)
             {

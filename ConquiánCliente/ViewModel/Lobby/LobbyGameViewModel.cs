@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLobby;
+using ServiceLobby;
 using ConquiánCliente.View.Lobby;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using ConquiánCliente.Utilities.Messages;
+using ConquiánCliente.View.Authentication;
 
 namespace ConquiánCliente.ViewModel.Lobby
 {
@@ -34,7 +35,12 @@ namespace ConquiánCliente.ViewModel.Lobby
         private string roomCode;
         private string currentMessage;
         private bool isNavigatingAway = false;
-        private LobbyClient client;
+
+        // --- CAMBIO: Usamos ILobby ---
+        private ILobby client;
+        private DuplexChannelFactory<ILobby> factory;
+        // -----------------------------
+
         private int idHost;
         private bool isHostBool;
         private readonly IMessageResolver messageResolver;
@@ -175,19 +181,26 @@ namespace ConquiánCliente.ViewModel.Lobby
             callbackHandler.OnYouWereKicked += HandleYouWereKicked;
 
             var context = new InstanceContext(callbackHandler);
-            client = new LobbyClient(context);
+
+            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
+            var tcpBinding = new NetTcpBinding(SecurityMode.None);
+            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+
+            factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
+            client = factory.CreateChannel();
+            // ----------------------------------------------------------------
+
             SubscribeToChannelEvents();
         }
 
         private void SubscribeToChannelEvents()
         {
-            if (client.InnerChannel != null)
+            if (client != null)
             {
-                client.InnerChannel.Closed += OnConnectionLost;
-                client.InnerChannel.Faulted += OnConnectionLost;
+                ((ICommunicationObject)client).Closed += OnConnectionLost;
+                ((ICommunicationObject)client).Faulted += OnConnectionLost;
             }
         }
-
 
         private void OnConnectionLost(object sender, EventArgs e)
         {
@@ -359,7 +372,7 @@ namespace ConquiánCliente.ViewModel.Lobby
 
         private void HandleServiceFault(FaultException<ServiceFaultDto> fault)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
             string msg = messageResolver.GetMessage(errorType);
 
             Application.Current.Dispatcher.Invoke(() =>
@@ -642,35 +655,39 @@ namespace ConquiánCliente.ViewModel.Lobby
 
         private void AttemptNotifyServerLeave()
         {
-            try
+            Task.Run(async () =>
             {
-                client.LeaveAndUnsubscribe(this.RoomCode, this.myPlayerId);
-            }
-            catch (CommunicationException)
-            {
-                // Ignored: The server is not reachable to report the output. 
-                // Since the client is closing, no retry is required.
-            }
-            catch (TimeoutException)
-            {
-                // Ignored: The request exceeded the timeout. 
-                // The priority is to free up client resources, so no retry is attempted.
-            }
+                try
+                {
+                    await client.LeaveAndUnsubscribeAsync(this.RoomCode, this.myPlayerId);
+                }
+                catch (CommunicationException)
+                {
+                }
+                catch (TimeoutException)
+                {
+                }
+            });
         }
 
         private void SafeCloseClient()
         {
             try
             {
-                client.Close();
+                ((ICommunicationObject)client).Close();
             }
             catch (Exception)
             {
-                client.Abort();
+                ((ICommunicationObject)client).Abort();
             }
             finally
             {
+                if (factory != null)
+                {
+                    try { factory.Close(); } catch { factory.Abort(); }
+                }
                 client = null;
+                factory = null;
             }
         }
 
@@ -695,8 +712,7 @@ namespace ConquiánCliente.ViewModel.Lobby
             }
             catch (InvalidOperationException)
             {
-                // Ignored: This exception occurs if the window is already closed or closing.
-                // The goal is to ensure that the window does not exist, so this state is acceptable.
+                // Ignored
             }
         }
 
@@ -723,8 +739,7 @@ namespace ConquiánCliente.ViewModel.Lobby
                     }
                     catch (Exception)
                     {
-                        // Ignored: This is a ‘best effort’ cleanup task.
-                        // Failure here should not halt the main shutdown flow or cause a crash.
+                        // Ignored
                     }
                 });
             }
@@ -815,12 +830,12 @@ namespace ConquiánCliente.ViewModel.Lobby
 
         private void HandleStartGameFault(FaultException<ServiceFaultDto> fault)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
             string msg = messageResolver.GetMessage(errorType);
 
             Application.Current.Dispatcher.Invoke(() =>
             {
-                if (errorType == ConquiánCliente.ServiceLogin.ServiceErrorType.OpponentConnectionLost)
+                if (errorType == ServiceLogin.ServiceErrorType.OpponentConnectionLost)
                 {
                     MessageBox.Show(msg, Lang.TitleConnectionError, MessageBoxButton.OK, MessageBoxImage.Warning);
                 }

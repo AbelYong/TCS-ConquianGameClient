@@ -1,5 +1,5 @@
 ﻿using System;
-using ConquiánCliente.ServicePresence;
+using ServicePresence;
 
 namespace ConquiánCliente.ViewModel
 {

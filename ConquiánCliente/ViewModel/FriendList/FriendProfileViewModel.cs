@@ -1,4 +1,4 @@
-﻿using ConquiánCliente.ServiceUserProfile;
+﻿using ServiceUserProfile;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;

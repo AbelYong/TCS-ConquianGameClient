@@ -1,4 +1,4 @@
-﻿using ConquiánCliente.ServiceInvitation;
+﻿using ServiceInvitation;
 using System;
 using System.ServiceModel;
 using System.Windows;

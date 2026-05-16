@@ -1,25 +1,28 @@
-﻿using ConquiánCliente.ServicePresence;
+﻿using ServicePresence;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ServiceModel;
 using System.Windows;
 using ConquiánCliente.Properties.Langs;
+using ConquiánCliente.View.Authentication;
 
 namespace ConquiánCliente.ViewModel
 {
     public class PresenceClientManager
     {
         private static PresenceClientManager instance;
-        private PresenceClient client;
 
-        public PresenceClient Client
+        // --- CAMBIO: Usamos IPresence y DuplexChannelFactory ---
+        private IPresence client;
+        private DuplexChannelFactory<IPresence> factory;
+        // -------------------------------------------------------
+
+        public IPresence Client
         {
             get
             {
-                if (client == null ||
-                    client.State == CommunicationState.Closed ||
-                    client.State == CommunicationState.Faulted)
+                if (IsClientInvalid())
                 {
                     InitializeClient();
                 }
@@ -45,9 +48,10 @@ namespace ConquiánCliente.ViewModel
 
         private bool IsClientInvalid()
         {
+            // --- CAMBIO: Casteo a ICommunicationObject ---
             bool isInvalid = client == null ||
-                             client.State == CommunicationState.Closed ||
-                             client.State == CommunicationState.Faulted;
+                             ((ICommunicationObject)client).State == CommunicationState.Closed ||
+                             ((ICommunicationObject)client).State == CommunicationState.Faulted;
             return isInvalid;
         }
 
@@ -56,12 +60,22 @@ namespace ConquiánCliente.ViewModel
             CleanupExistingClient();
 
             var context = new InstanceContext(new PresenceCallbackHandler());
-            client = new PresenceClient(context);
 
-            if (client.InnerChannel != null)
+            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
+            var tcpBinding = new NetTcpBinding(SecurityMode.None);
+            var endpoint = new EndpointAddress("net.tcp://localhost:8081/presence");
+
+            factory = new DuplexChannelFactory<IPresence>(context, tcpBinding, endpoint);
+            client = factory.CreateChannel();
+
+            // Abrimos el canal explícitamente
+            ((ICommunicationObject)client).Open();
+            // ----------------------------------------------------------------
+
+            if (client != null)
             {
-                client.InnerChannel.Closed += OnConnectionLost;
-                client.InnerChannel.Faulted += OnConnectionLost;
+                ((ICommunicationObject)client).Closed += OnConnectionLost;
+                ((ICommunicationObject)client).Faulted += OnConnectionLost;
             }
         }
 
@@ -74,32 +88,38 @@ namespace ConquiánCliente.ViewModel
 
             try
             {
-                if (client.InnerChannel != null)
-                {
-                    client.InnerChannel.Closed -= OnConnectionLost;
-                    client.InnerChannel.Faulted -= OnConnectionLost;
-                }
+                ((ICommunicationObject)client).Closed -= OnConnectionLost;
+                ((ICommunicationObject)client).Faulted -= OnConnectionLost;
 
-                if (client.State == CommunicationState.Faulted)
+                if (((ICommunicationObject)client).State == CommunicationState.Faulted)
                 {
-                    client.Abort();
+                    ((ICommunicationObject)client).Abort();
                 }
                 else
                 {
-                    client.Close();
+                    ((ICommunicationObject)client).Close();
                 }
             }
             catch (CommunicationException)
             {
-                client.Abort();
+                ((ICommunicationObject)client).Abort();
             }
             catch (TimeoutException)
             {
-                client.Abort();
+                ((ICommunicationObject)client).Abort();
             }
             catch (Exception)
             {
-                client.Abort();
+                ((ICommunicationObject)client).Abort();
+            }
+            finally
+            {
+                if (factory != null)
+                {
+                    try { factory.Close(); } catch { factory.Abort(); }
+                }
+                client = null;
+                factory = null;
             }
         }
 

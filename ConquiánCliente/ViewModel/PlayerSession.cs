@@ -1,5 +1,5 @@
-﻿using ConquiánCliente.ServiceLogin;
-using PlayerLogin = ConquiánCliente.ServiceLogin.PlayerDto;
+﻿using ServiceLogin;
+using PlayerLogin = ServiceLogin.PlayerDto;
 
 namespace ConquiánCliente.ViewModel
 {

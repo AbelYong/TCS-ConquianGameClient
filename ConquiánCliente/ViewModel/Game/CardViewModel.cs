@@ -1,4 +1,4 @@
-﻿using ConquiánCliente.ServiceGame; 
+﻿using ServiceGame; 
 
 namespace ConquiánCliente.ViewModel.Game
 {

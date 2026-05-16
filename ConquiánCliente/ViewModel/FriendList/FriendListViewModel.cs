@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceFriendList;
+using ServiceFriendList;
 using ConquiánCliente.View.FriendList;
 using ConquiánCliente.ViewModel.Lobby;
 using System;
@@ -40,13 +40,20 @@ namespace ConquiánCliente.ViewModel.FriendList
         }
 
         private readonly FriendListClient friendListService;
-        private readonly ConquiánCliente.ServiceUserProfile.UserProfileClient userProfileService;
+        private readonly ServiceUserProfile.UserProfileClient userProfileService;
         private readonly IMessageResolver messageResolver;
 
         public FriendListViewModel()
         {
-            friendListService = new FriendListClient();
-            userProfileService = new ConquiánCliente.ServiceUserProfile.UserProfileClient();
+            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 ---
+            var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+            var friendListEndpoint = new EndpointAddress("http://localhost:8080/friendlist");
+            var userProfileEndpoint = new EndpointAddress("http://localhost:8080/userprofile");
+
+            friendListService = new FriendListClient(basicBinding, friendListEndpoint);
+            userProfileService = new ServiceUserProfile.UserProfileClient(basicBinding, userProfileEndpoint);
+            // ----------------------------------------
+
             this.messageResolver = new ResourceMessageResolver();
 
             Friends = new ObservableCollection<FriendInviteItemViewModel>();
@@ -205,9 +212,9 @@ namespace ConquiánCliente.ViewModel.FriendList
             }
         }
 
-        private void ShowProfileWindow(ConquiánCliente.ServiceUserProfile.PlayerDto profile, ConquiánCliente.ServiceUserProfile.SocialDto[] socials)
+        private void ShowProfileWindow(ServiceUserProfile.PlayerDto profile, ServiceUserProfile.SocialDto[] socials)
         {
-            var profileWindow = new FriendProfile(profile, new ObservableCollection<ConquiánCliente.ServiceUserProfile.SocialDto>(socials));
+            var profileWindow = new FriendProfile(profile, new ObservableCollection<ServiceUserProfile.SocialDto>(socials));
             profileWindow.ShowDialog();
         }
 
@@ -247,13 +254,13 @@ namespace ConquiánCliente.ViewModel.FriendList
         {
             if (ex is FaultException<ServiceFriendList.ServiceFaultDto> fault)
             {
-                var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+                var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
                 string msg = messageResolver.GetMessage(errorType);
                 MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (ex is FaultException<ServiceUserProfile.ServiceFaultDto> userProfileFault)
             {
-                var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)userProfileFault.Detail.ErrorType;
+                var errorType = (ServiceLogin.ServiceErrorType)(int)userProfileFault.Detail.ErrorType;
                 string msg = messageResolver.GetMessage(errorType);
                 MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Information);
             }

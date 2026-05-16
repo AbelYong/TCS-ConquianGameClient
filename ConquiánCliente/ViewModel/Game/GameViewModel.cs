@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceGame;
+using ServiceGame;
 using ConquiánCliente.Utilities.Messages;
 using ConquiánCliente.ViewModel.Validation;
 using System;
@@ -29,7 +29,12 @@ namespace ConquiánCliente.ViewModel.Game
         private bool isWarningShown;
 
         private readonly string roomCode;
-        private GameClient client;
+
+        // --- CAMBIO: Usamos IGame en lugar de GameClient ---
+        private IGame client;
+        private DuplexChannelFactory<IGame> factory;
+        // ---------------------------------------------------
+
         private bool isGameEnded = false;
         private readonly IMessageResolver messageResolver;
         private bool isNavigatingAway = false;
@@ -157,18 +162,22 @@ namespace ConquiánCliente.ViewModel.Game
             {
                 try
                 {
-                    client.InnerChannel.Closed -= OnConnectionLost;
-                    client.InnerChannel.Faulted -= OnConnectionLost;
-                    client.Abort();
+                    ((ICommunicationObject)client).Closed -= OnConnectionLost;
+                    ((ICommunicationObject)client).Faulted -= OnConnectionLost;
+                    ((ICommunicationObject)client).Abort();
                 }
                 catch
                 {
-                    // Intentionally ignored: if the channel is already closed or in a failed state,
-                    // Abort() could throw an exception that does not affect the cleanup of other resources.
+                    // Intentionally ignored
                 }
                 finally
                 {
+                    if (factory != null)
+                    {
+                        try { factory.Close(); } catch { factory.Abort(); }
+                    }
                     client = null;
+                    factory = null;
                 }
             }
         }
@@ -193,18 +202,19 @@ namespace ConquiánCliente.ViewModel.Game
 
             isNavigatingAway = true;
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
                     if (client != null && CurrentPlayer != null)
                     {
-                        client.LeaveGame(roomCode, CurrentPlayer.idPlayer);
+                        // --- CAMBIO: Usamos la versión Async ---
+                        await client.LeaveGameAsync(roomCode, CurrentPlayer.idPlayer);
                     }
                 }
                 catch (Exception)
                 {
-                    // The exception is intentionally ignored so as not to block navigation if the connection fails upon exit. 
+                    // The exception is intentionally ignored
                 }
             });
         }
@@ -251,7 +261,14 @@ namespace ConquiánCliente.ViewModel.Game
             {
                 gameCallbackHandler = ConfigureGameCallbacks();
                 var context = new InstanceContext(gameCallbackHandler);
-                client = new GameClient(context);
+
+                // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
+                var tcpBinding = new NetTcpBinding(SecurityMode.None);
+                var endpoint = new EndpointAddress("net.tcp://localhost:8081/game");
+
+                factory = new DuplexChannelFactory<IGame>(context, tcpBinding, endpoint);
+                client = factory.CreateChannel();
+                // ----------------------------------------------------------------
 
                 MonitorConnection();
 
@@ -275,10 +292,10 @@ namespace ConquiánCliente.ViewModel.Game
 
         private void MonitorConnection()
         {
-            if (client.InnerChannel != null)
+            if (client != null)
             {
-                client.InnerChannel.Closed += OnConnectionLost;
-                client.InnerChannel.Faulted += OnConnectionLost;
+                ((ICommunicationObject)client).Closed += OnConnectionLost;
+                ((ICommunicationObject)client).Faulted += OnConnectionLost;
             }
         }
 
@@ -469,7 +486,6 @@ namespace ConquiánCliente.ViewModel.Game
             loginView.Show();
             CloseWindow();
         }
-
 
         private void HandleGameEndedByAFK(string reasonKey)
         {
@@ -889,14 +905,19 @@ namespace ConquiánCliente.ViewModel.Game
         private void ReportSelfAFK()
         {
             IsAFKWarningVisible = false;
-            try
+
+            // --- CAMBIO: Usamos versión Async con Task.Run ---
+            Task.Run(async () =>
             {
-                client.ReportAFK(roomCode, CurrentPlayer.idPlayer);
-            }
-            catch (Exception)
-            {
-                ReturnToMainMenu();
-            }
+                try
+                {
+                    await client.ReportAFKAsync(roomCode, CurrentPlayer.idPlayer);
+                }
+                catch (Exception)
+                {
+                    ReturnToMainMenu();
+                }
+            });
         }
 
         public void StartTurnTimer()
@@ -930,9 +951,10 @@ namespace ConquiánCliente.ViewModel.Game
 
         private void HandleServiceException(Exception ex)
         {
-            if (ex is FaultException<ServiceFaultDto> fault)
+            // --- CAMBIO: Se agregó "ServiceGame." explícito al Dto ---
+            if (ex is FaultException<ServiceGame.ServiceFaultDto> fault)
             {
-                var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+                var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
                 string msg = messageResolver.GetMessage(errorType);
                 MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Warning);
             }

@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServicePasswordRecovery;
+using ServicePasswordRecovery;
 using ConquiánCliente.Utilities.Messages;
 using ConquiánCliente.View.Authentication.PasswordRecovery;
 using ConquiánCliente.View.Profile;
@@ -79,7 +79,12 @@ namespace ConquiánCliente.ViewModel.Authentication.PasswordRecovery
 
             try
             {
-                recoveryClient = new PasswordRecoveryClient();
+                // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión HTTP Estándar) ---
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/password-recovery");
+
+                recoveryClient = new PasswordRecoveryClient(basicBinding, endpoint);
+                // -----------------------------------------------------------------
             }
             catch (EndpointNotFoundException)
             {
@@ -249,10 +254,11 @@ namespace ConquiánCliente.ViewModel.Authentication.PasswordRecovery
 
         private void HandleException(Exception ex)
         {
-            if (ex is FaultException<ServiceFaultDto> fault)
+            // --- CAMBIO: Se agregó "ServicePasswordRecovery." explícito al Dto ---
+            if (ex is FaultException<ServicePasswordRecovery.ServiceFaultDto> fault)
             {
                 int errorValue = (int)fault.Detail.ErrorType;
-                var targetErrorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)errorValue;
+                var targetErrorType = (ServiceLogin.ServiceErrorType)errorValue;
 
                 string errorMessage = messageResolver.GetMessage(targetErrorType);
 

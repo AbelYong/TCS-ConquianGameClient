@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceUserProfile;
+using ServiceUserProfile;
 using ConquiánCliente.View;
 using ConquiánCliente.View.Authentication.PasswordRecovery;
 using ConquiánCliente.View.Profile;
@@ -12,7 +12,7 @@ using System.ServiceModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ConquiánCliente.Utilities.Messages; 
+using ConquiánCliente.Utilities.Messages;
 
 namespace ConquiánCliente.ViewModel.Profile
 {
@@ -24,7 +24,7 @@ namespace ConquiánCliente.ViewModel.Profile
         private PlayerDto player;
         private string instagramLink;
         private string facebookLink;
-        private readonly IMessageResolver messageResolver; 
+        private readonly IMessageResolver messageResolver;
 
         public bool IsLoading
         {
@@ -62,12 +62,13 @@ namespace ConquiánCliente.ViewModel.Profile
         public EditInfoViewModel(PlayerDto playerDto)
         {
             Player = playerDto;
-            this.messageResolver = new ResourceMessageResolver(); 
+            this.messageResolver = new ResourceMessageResolver();
 
             SaveChangesCommand = new RelayCommand(ExecuteSaveChanges, CanExecuteSaveChanges);
             NavigateToChangePasswordCommand = new RelayCommand(ExecuteNavigateToChangePassword, CanExecuteChangePassword);
             CancelCommand = new RelayCommand(ExecuteCancel);
-            LoadPlayerSocials();
+
+            LoadPlayerSocials(); // Fire and forget en el constructor
         }
 
         private bool CanExecuteChangePassword(object parameter)
@@ -127,12 +128,18 @@ namespace ConquiánCliente.ViewModel.Profile
             MessageBox.Show(Lang.ErrorServerUnavailable, Lang.TitleConnectionError);
         }
 
-        private void LoadPlayerSocials()
+        // --- CAMBIO: Convertido a async ---
+        private async void LoadPlayerSocials()
         {
             try
             {
-                var client = new UserProfileClient();
-                SocialDto[] socialsArray = client.GetPlayerSocials(Player.idPlayer);
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/userprofile");
+
+                var client = new UserProfileClient(basicBinding, endpoint);
+
+                // --- CAMBIO: Usamos await y la versión Async ---
+                SocialDto[] socialsArray = await client.GetPlayerSocialsAsync(Player.idPlayer);
 
                 List<SocialDto> socials = GetSocialsList(socialsArray);
 
@@ -308,16 +315,21 @@ namespace ConquiánCliente.ViewModel.Profile
             return password;
         }
 
-        private void UpdatePlayerInformation()
+        // --- CAMBIO: Convertido a async ---
+        private async void UpdatePlayerInformation()
         {
             try
             {
-                var client = new UserProfileClient();
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/userprofile");
 
-                client.UpdatePlayer(this.Player);
+                var client = new UserProfileClient(basicBinding, endpoint);
+
+                // --- CAMBIO: Usamos await y la versión Async ---
+                await client.UpdatePlayerAsync(this.Player);
 
                 var socialsToUpdate = BuildSocialsUpdateList();
-                client.UpdatePlayerSocials(Player.idPlayer, socialsToUpdate.ToArray());
+                await client.UpdatePlayerSocialsAsync(Player.idPlayer, socialsToUpdate.ToArray());
 
                 MessageBox.Show(Lang.InfoUpdateSuccess, Lang.TitleSuccess);
                 PlayerSession.CurrentPlayer.nickname = this.Player.nickname;
@@ -376,7 +388,6 @@ namespace ConquiánCliente.ViewModel.Profile
             string msg = messageResolver.GetMessage(errorType);
             MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Warning);
         }
-
 
         private static void ExecuteCancel(object parameter)
         {

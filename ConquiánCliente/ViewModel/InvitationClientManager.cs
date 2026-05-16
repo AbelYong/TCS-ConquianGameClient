@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceInvitation;
+using ServiceInvitation;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -9,7 +9,10 @@ namespace ConquiánCliente.ViewModel
 {
     public static class InvitationClientManager
     {
-        private static InvitationServiceClient client;
+        // --- CAMBIO: Usamos IInvitationService en lugar de InvitationServiceClient ---
+        private static IInvitationService client;
+        private static DuplexChannelFactory<IInvitationService> factory;
+        // -----------------------------------------------------------------------------
 
         public static void Connect(int idPlayer)
         {
@@ -22,8 +25,27 @@ namespace ConquiánCliente.ViewModel
             {
                 var callbackHandler = new InvitationCallbackHandler();
                 var context = new InstanceContext(callbackHandler);
-                client = new InvitationServiceClient(context);
-                client.Subscribe(idPlayer);
+
+                // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
+                var tcpBinding = new NetTcpBinding(SecurityMode.None);
+                var endpoint = new EndpointAddress("net.tcp://localhost:8081/invitation");
+
+                factory = new DuplexChannelFactory<IInvitationService>(context, tcpBinding, endpoint);
+                client = factory.CreateChannel();
+
+                // Abrimos el canal explícitamente para que el estado cambie a Opened
+                ((ICommunicationObject)client).Open();
+                // ----------------------------------------------------------------
+
+                // Enviamos la suscripción en segundo plano usando la versión Async
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        await client.SubscribeAsync(idPlayer);
+                    }
+                    catch { /* Ignoramos si falla en segundo plano para no crashear */ }
+                });
             }
             catch (EndpointNotFoundException)
             {
@@ -39,8 +61,6 @@ namespace ConquiánCliente.ViewModel
             }
         }
 
-
-
         public static void Disconnect(int idPlayer)
         {
             if (client == null)
@@ -50,9 +70,17 @@ namespace ConquiánCliente.ViewModel
 
             try
             {
-                if (client.State == CommunicationState.Opened)
+                if (((ICommunicationObject)client).State == CommunicationState.Opened)
                 {
-                    client.Unsubscribe(idPlayer);
+                    // --- CAMBIO: Usamos la versión Async envuelta en un Task ---
+                    Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await client.UnsubscribeAsync(idPlayer);
+                        }
+                        catch { }
+                    });
                 }
             }
             catch (CommunicationException)
@@ -60,7 +88,6 @@ namespace ConquiánCliente.ViewModel
             }
             catch (TimeoutException)
             {
-
             }
             finally
             {
@@ -87,7 +114,8 @@ namespace ConquiánCliente.ViewModel
 
         private static bool IsClientConnected()
         {
-            bool isConnected = client != null && client.State == CommunicationState.Opened;
+            // --- CAMBIO: Casteo a ICommunicationObject para poder leer el State ---
+            bool isConnected = client != null && ((ICommunicationObject)client).State == CommunicationState.Opened;
             return isConnected;
         }
 
@@ -100,30 +128,35 @@ namespace ConquiánCliente.ViewModel
 
             try
             {
-                if (client.State == CommunicationState.Opened)
+                if (((ICommunicationObject)client).State == CommunicationState.Opened)
                 {
-                    client.Close();
+                    ((ICommunicationObject)client).Close();
                 }
                 else
                 {
-                    client.Abort();
+                    ((ICommunicationObject)client).Abort();
                 }
             }
             catch (CommunicationException)
             {
-                client.Abort();
+                ((ICommunicationObject)client).Abort();
             }
             catch (TimeoutException)
             {
-                client.Abort();
+                ((ICommunicationObject)client).Abort();
             }
             catch (Exception)
             {
-                client.Abort();
+                ((ICommunicationObject)client).Abort();
             }
             finally
             {
+                if (factory != null)
+                {
+                    try { factory.Close(); } catch { factory.Abort(); }
+                }
                 client = null;
+                factory = null;
             }
         }
 

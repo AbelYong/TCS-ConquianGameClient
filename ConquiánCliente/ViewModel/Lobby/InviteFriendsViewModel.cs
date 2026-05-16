@@ -1,6 +1,6 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceFriendList;
-using ConquiánCliente.ServiceInvitation;
+using ServiceFriendList;
+using ServiceInvitation;
 using ConquiánCliente.Utilities.Messages;
 using ConquiánCliente.View.Lobby;
 using System;
@@ -162,9 +162,9 @@ namespace ConquiánCliente.ViewModel.Lobby
 
         private void HandleInvitationFault(FaultException<ServiceInvitation.ServiceFaultDto> fault, FriendInviteItemViewModel friendVM)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
 
-            if (errorType == ConquiánCliente.ServiceLogin.ServiceErrorType.UserOffline)
+            if (errorType == ServiceLogin.ServiceErrorType.UserOffline)
             {
                 friendVM.StatusText = Lang.StatusOffline;
                 friendVM.IsOnline = false;
@@ -178,7 +178,7 @@ namespace ConquiánCliente.ViewModel.Lobby
 
         private void HandleServiceFault(FaultException<ServiceFriendList.ServiceFaultDto> fault)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
             string msg = messageResolver.GetMessage(errorType);
             MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Error);
         }

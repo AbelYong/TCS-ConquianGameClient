@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLobby;
+using ServiceLobby;
 using ConquiánCliente.View.Lobby;
 using System;
 using System.Collections.Generic;
@@ -61,13 +61,21 @@ namespace ConquiánCliente.ViewModel.Lobby
         private async Task<LobbyDto> FetchLobbyStateAsync(Window window)
         {
             LobbyDto fetchedState = null;
+            DuplexChannelFactory<ILobby> factory = null;
+            ILobby lobbyClient = null;
 
             try
             {
-                using (var lobbyClient = new LobbyClient(new InstanceContext(LobbyCallbackHandler.Instance)))
-                {
-                    fetchedState = await lobbyClient.GetLobbyStateAsync(this.roomCode);
-                }
+                // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex segura) ---
+                var context = new InstanceContext(LobbyCallbackHandler.Instance);
+                var tcpBinding = new NetTcpBinding(SecurityMode.None);
+                var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+
+                factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
+                lobbyClient = factory.CreateChannel();
+                // ----------------------------------------------------------------------
+
+                fetchedState = await lobbyClient.GetLobbyStateAsync(this.roomCode);
             }
             catch (EndpointNotFoundException)
             {
@@ -83,6 +91,30 @@ namespace ConquiánCliente.ViewModel.Lobby
             {
                 MessageBox.Show(Lang.ErrorConnectingToServer, Lang.TitleError);
                 CloseWindow(window);
+            }
+            finally
+            {
+                // Cierre seguro del canal y la fábrica
+                if (lobbyClient != null)
+                {
+                    try
+                    {
+                        if (((ICommunicationObject)lobbyClient).State == CommunicationState.Opened)
+                        {
+                            ((ICommunicationObject)lobbyClient).Close();
+                        }
+                        else
+                        {
+                            ((ICommunicationObject)lobbyClient).Abort();
+                        }
+                    }
+                    catch { ((ICommunicationObject)lobbyClient).Abort(); }
+                }
+
+                if (factory != null)
+                {
+                    try { factory.Close(); } catch { factory.Abort(); }
+                }
             }
 
             return fetchedState;

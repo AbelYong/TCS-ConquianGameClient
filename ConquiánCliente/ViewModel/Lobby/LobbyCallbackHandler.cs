@@ -1,4 +1,4 @@
-﻿using ConquiánCliente.ServiceLobby;
+﻿using ServiceLobby;
 using System;
 using System.ServiceModel;
 

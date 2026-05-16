@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLobby;
+using ServiceLobby;
 using ConquiánCliente.Utilities.Messages;
 using ConquiánCliente.ViewModel.Lobby;
 using System;
@@ -54,13 +54,21 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
 
             SetLoadingState(true);
-            LobbyClient client = new LobbyClient(new InstanceContext(LobbyCallbackHandler.Instance));
+
+            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
+            var context = new InstanceContext(LobbyCallbackHandler.Instance);
+            var tcpBinding = new NetTcpBinding(SecurityMode.None);
+            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+
+            var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
+            ILobby client = factory.CreateChannel();
+            // ----------------------------------------------------------------
 
             try
             {
                 await AttemptCreateLobby(client, window);
             }
-            catch (FaultException<ServiceFaultDto> ex)
+            catch (FaultException<ServiceLobby.ServiceFaultDto> ex)
             {
                 HandleServiceFault(ex);
             }
@@ -78,7 +86,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
             finally
             {
-                SafeCloseClient(client);
+                SafeCloseClient(client, factory);
                 SetLoadingState(false);
             }
         }
@@ -87,9 +95,9 @@ namespace ConquiánCliente.ViewModel.MainMenu
 
         private void HandleServiceException(Exception ex)
         {
-            if (ex is FaultException<ServiceFaultDto> fault)
+            if (ex is FaultException<ServiceLobby.ServiceFaultDto> fault)
             {
-                var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+                var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
                 string msg = messageResolver.GetMessage(errorType);
                 MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
@@ -107,7 +115,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
         }
 
-        private async Task AttemptCreateLobby(LobbyClient client, Window window)
+        private async Task AttemptCreateLobby(ILobby client, Window window)
         {
             CreatedRoomCode = await client.CreateLobbyAsync(PlayerSession.CurrentPlayer.idPlayer);
 
@@ -135,13 +143,21 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
 
             SetLoadingState(true);
-            LobbyClient client = new LobbyClient(new InstanceContext(LobbyCallbackHandler.Instance));
+
+            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
+            var context = new InstanceContext(LobbyCallbackHandler.Instance);
+            var tcpBinding = new NetTcpBinding(SecurityMode.None);
+            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+
+            var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
+            ILobby client = factory.CreateChannel();
+            // ----------------------------------------------------------------
 
             try
             {
                 await AttemptJoinLobby(client, window);
             }
-            catch (FaultException<ServiceFaultDto> ex)
+            catch (FaultException<ServiceLobby.ServiceFaultDto> ex)
             {
                 HandleServiceFault(ex, isInfo: true);
             }
@@ -159,12 +175,12 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
             finally
             {
-                SafeCloseClient(client);
+                SafeCloseClient(client, factory);
                 SetLoadingState(false);
             }
         }
 
-        private async Task AttemptJoinLobby(LobbyClient client, Window window)
+        private async Task AttemptJoinLobby(ILobby client, Window window)
         {
             var lobbyState = await client.GetLobbyStateAsync(RoomCode.ToUpper());
 
@@ -181,35 +197,38 @@ namespace ConquiánCliente.ViewModel.MainMenu
             CommandManager.InvalidateRequerySuggested();
         }
 
-        private void SafeCloseClient(LobbyClient client)
+        private void SafeCloseClient(ILobby client, DuplexChannelFactory<ILobby> factory)
         {
-            if (client == null)
+            if (client != null)
             {
-                return;
+                try
+                {
+                    if (((ICommunicationObject)client).State == CommunicationState.Opened)
+                    {
+                        ((ICommunicationObject)client).Close();
+                    }
+                    else
+                    {
+                        ((ICommunicationObject)client).Abort();
+                    }
+                }
+                catch (CommunicationException)
+                {
+                    ((ICommunicationObject)client).Abort();
+                }
+                catch (TimeoutException)
+                {
+                    ((ICommunicationObject)client).Abort();
+                }
+                catch (Exception)
+                {
+                    ((ICommunicationObject)client).Abort();
+                }
             }
 
-            try
+            if (factory != null)
             {
-                if (client.State == CommunicationState.Opened)
-                {
-                    client.Close();
-                }
-                else
-                {
-                    client.Abort();
-                }
-            }
-            catch (CommunicationException)
-            {
-                client.Abort();
-            }
-            catch (TimeoutException)
-            {
-                client.Abort();
-            }
-            catch (Exception)
-            {
-                client.Abort();
+                try { factory.Close(); } catch { factory.Abort(); }
             }
         }
 
@@ -219,9 +238,9 @@ namespace ConquiánCliente.ViewModel.MainMenu
             window.Close();
         }
 
-        private void HandleServiceFault(FaultException<ServiceFaultDto> fault, bool isInfo = false)
+        private void HandleServiceFault(FaultException<ServiceLobby.ServiceFaultDto> fault, bool isInfo = false)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
             string msg = messageResolver.GetMessage(errorType);
 
             MessageBoxImage icon = isInfo ? MessageBoxImage.Information : MessageBoxImage.Warning;

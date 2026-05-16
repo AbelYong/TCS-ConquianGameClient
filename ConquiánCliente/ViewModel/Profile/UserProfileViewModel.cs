@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceUserProfile;
+using ServiceUserProfile;
 using ConquiánCliente.View;
 using ConquiánCliente.View.Profile;
 using System.Collections.ObjectModel;
@@ -161,7 +161,13 @@ namespace ConquiánCliente.ViewModel.Profile
 
             try
             {
-                var userProfileClient = new UserProfileClient();
+                // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión HTTP Estándar) ---
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/userprofile");
+
+                var userProfileClient = new UserProfileClient(basicBinding, endpoint);
+                // -----------------------------------------------------------------
+
                 await LoadUserProfileAsync(userProfileClient, sessionPlayer.idPlayer);
                 await LoadUserSocialsAsync(userProfileClient, sessionPlayer.idPlayer);
                 await LoadMatchHistoryAsync(userProfileClient, sessionPlayer.idPlayer);
@@ -237,9 +243,10 @@ namespace ConquiánCliente.ViewModel.Profile
             {
                 MessageBox.Show(Lang.ErrorServerUnavailable, Lang.TitleConnectionError);
             }
-            else if (ex is FaultException<ServiceFaultDto> faultEx)
+            // --- CAMBIO: Referencia directa a ServiceUserProfile ---
+            else if (ex is FaultException<ServiceUserProfile.ServiceFaultDto> faultEx)
             {
-                if (faultEx.Detail.ErrorType == ServiceErrorType.DatabaseError)
+                if (faultEx.Detail.ErrorType == ServiceUserProfile.ServiceErrorType.DatabaseError)
                 {
                     MessageBox.Show(Lang.GlobalSqlError, Lang.TitleConnectionError);
                 }
@@ -248,6 +255,7 @@ namespace ConquiánCliente.ViewModel.Profile
                     MessageBox.Show(Lang.ErrorUserNotFound, Lang.TitleError);
                 }
             }
+            // --------------------------------------------------------
             else
             {
                 MessageBox.Show(string.Format(Lang.ErrorUnexpected, ex.Message), Lang.TitleError);
@@ -286,14 +294,14 @@ namespace ConquiánCliente.ViewModel.Profile
             var editInfoPage = new EditInfoPage
             {
                 DataContext = editInfoViewModel
-            };  
+            };
 
             ProfileMainFrame.MainFrame.Navigate(editInfoPage);
         }
         private void ExecuteNavigateToEditProfilePicture(object obj)
         {
             EditProfilePicture editProfilePicture = new EditProfilePicture();
-            editProfilePicture.ShowDialog(); 
+            editProfilePicture.ShowDialog();
 
             if (PlayerSession.IsLoggedIn)
             {

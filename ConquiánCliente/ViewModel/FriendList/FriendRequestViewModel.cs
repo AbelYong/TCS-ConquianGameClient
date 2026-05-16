@@ -1,6 +1,6 @@
 ﻿using ConquiánCliente.Models;
 using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceFriendList;
+using ServiceFriendList;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -120,11 +120,11 @@ namespace ConquiánCliente.ViewModel.FriendList
 
         private void HandleFaultException(FaultException<ServiceFriendList.ServiceFaultDto> fault, FriendRequest request)
         {
-            var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+            var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
             string msg = messageResolver.GetMessage(errorType);
             MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Information);
 
-            if (errorType == ConquiánCliente.ServiceLogin.ServiceErrorType.NotFound)
+            if (errorType == ServiceLogin.ServiceErrorType.NotFound)
             {
                 Requests.Remove(request);
             }
@@ -146,7 +146,7 @@ namespace ConquiánCliente.ViewModel.FriendList
         {
             if (ex is FaultException<ServiceFriendList.ServiceFaultDto> fault)
             {
-                var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+                var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
                 string msg = messageResolver.GetMessage(errorType);
                 MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Information);
             }

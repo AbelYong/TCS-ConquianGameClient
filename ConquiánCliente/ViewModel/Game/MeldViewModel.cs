@@ -1,4 +1,4 @@
-﻿using ConquiánCliente.ServiceGame;
+﻿using ServiceGame;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;

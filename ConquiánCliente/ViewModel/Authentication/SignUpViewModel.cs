@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceSignUp;
+using ServiceSignUp;
 using ConquiánCliente.Utilities.Messages;
 using ConquiánCliente.View;
 using ConquiánCliente.ViewModel.Validation;
@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
 
 namespace ConquiánCliente.ViewModel.Authentication
 {
@@ -185,7 +184,10 @@ namespace ConquiánCliente.ViewModel.Authentication
 
             try
             {
-                var client = new SignUpClient();
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/signUp");
+                var client = new SignUpClient(basicBinding, endpoint);
+
                 string verificationCode = await client.SendVerificationCodeAsync(Email);
 
                 if (!string.IsNullOrEmpty(verificationCode))
@@ -231,7 +233,10 @@ namespace ConquiánCliente.ViewModel.Authentication
 
             try
             {
-                var client = new SignUpClient();
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/signUp");
+                var client = new SignUpClient(basicBinding, endpoint);
+
                 await client.VerifyCodeAsync(playerInProgress.email, EnteredVerificationCode);
 
                 HandleVerificationSuccess(parameter);
@@ -295,8 +300,10 @@ namespace ConquiánCliente.ViewModel.Authentication
 
             try
             {
-                var client = new SignUpClient();
-                // El servidor ahora retorna Task (void), si no lanza excepción, es éxito.
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/signUp");
+                var client = new SignUpClient(basicBinding, endpoint);
+
                 await client.RegisterPlayerAsync(playerInProgress);
 
                 HandleRegistrationSuccess(parameter);
@@ -335,6 +342,7 @@ namespace ConquiánCliente.ViewModel.Authentication
 
             return isValid;
         }
+
         private void PopulatePlayerDto()
         {
             playerInProgress.name = Name.Trim();
@@ -360,7 +368,10 @@ namespace ConquiánCliente.ViewModel.Authentication
 
             try
             {
-                var client = new SignUpClient();
+                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                var endpoint = new EndpointAddress("http://localhost:8080/signUp");
+                var client = new SignUpClient(basicBinding, endpoint);
+
                 await client.CancelRegistrationAsync(this.Email);
                 client.Close();
             }
@@ -406,7 +417,7 @@ namespace ConquiánCliente.ViewModel.Authentication
         {
             if (ex is FaultException<ServiceFaultDto> fault)
             {
-                var errorType = (ConquiánCliente.ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType;
+                var errorType = (ServiceLogin.ServiceErrorType)(int)fault.Detail.ErrorType; 
                 string msg = messageResolver.GetMessage(errorType);
                 MessageBox.Show(msg, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Information);
             }

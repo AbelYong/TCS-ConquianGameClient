@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLogin;
+using ServiceLogin;
 
 namespace ConquiánCliente.Utilities.Messages
 {

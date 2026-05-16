@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceGame;
+using ServiceGame;
 using ConquiánCliente.Utilities;
 using ConquiánCliente.ViewModel;
 using ConquiánCliente.ViewModel.Game;

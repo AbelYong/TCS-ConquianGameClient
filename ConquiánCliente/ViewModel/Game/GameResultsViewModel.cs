@@ -1,5 +1,5 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceGame;
+using ServiceGame;
 using System.Windows;
 using System.Windows.Input;
 

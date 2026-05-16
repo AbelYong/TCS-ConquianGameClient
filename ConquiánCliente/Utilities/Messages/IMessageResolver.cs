@@ -1,4 +1,4 @@
-﻿using ConquiánCliente.ServiceLogin;
+﻿using ServiceLogin;
 
 namespace ConquiánCliente.Utilities.Messages
 {

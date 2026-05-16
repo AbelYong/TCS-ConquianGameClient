@@ -1,10 +1,10 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ConquiánCliente.ServiceLogin;
 using ConquiánCliente.Utilities.Messages;
 using ConquiánCliente.View;
 using ConquiánCliente.View.Authentication;
 using ConquiánCliente.View.Authentication.PasswordRecovery;
 using ConquiánCliente.ViewModel.Validation;
+using ServiceLogin;
 using System;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace ConquiánCliente.ViewModel.Authentication
         private string email;
         private int selectedLanguageIndex;
         private bool isLoggingIn;
-        private bool isLoading; 
+        private bool isLoading;
         private readonly IMessageResolver messageResolver;
 
         private const int LANGUAGE_INDEX_SPANISH = 1;
@@ -73,6 +73,7 @@ namespace ConquiánCliente.ViewModel.Authentication
         {
             return !isLoading && !isLoggingIn;
         }
+
         private async void ExecuteLogin(object parameter)
         {
             if (isLoggingIn)
@@ -136,7 +137,11 @@ namespace ConquiánCliente.ViewModel.Authentication
 
         private async Task PerformLogin(string password, PasswordBox passwordBox)
         {
-            var client = new LoginClient();
+            var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+            var endpoint = new EndpointAddress("http://localhost:8080/login");
+
+            var client = new LoginClient(basicBinding, endpoint);
+
             PlayerDto authenticatedPlayer = await client.AuthenticatePlayerAsync(Email, password);
 
             if (authenticatedPlayer.idPlayer > INVALID_PLAYER_ID)
@@ -163,10 +168,11 @@ namespace ConquiánCliente.ViewModel.Authentication
 
         private void HandleLoginException(Exception ex)
         {
-            if (ex is FaultException<ServiceFaultDto> fault)
+            if (ex is FaultException<ServiceLogin.ServiceFaultDto> fault)
             {
-                ServiceErrorType errorType = fault.Detail.ErrorType;
+                var errorType = fault.Detail.ErrorType;
                 string localMessage = messageResolver.GetMessage(errorType);
+
                 MessageBox.Show(localMessage, Lang.TitleError, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             else if (ex is EndpointNotFoundException)
@@ -184,6 +190,7 @@ namespace ConquiánCliente.ViewModel.Authentication
             var signUpWindow = new SignUp();
             NavigateAndClose(signUpWindow, parameter);
         }
+
         private void ExecuteNavigateToForgotPassword(object parameter)
         {
             var requestRecoveryWindow = new PasswordRecoveryMainFrame();
