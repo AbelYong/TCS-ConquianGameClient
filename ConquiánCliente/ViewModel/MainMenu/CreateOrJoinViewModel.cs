@@ -62,6 +62,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
 
             var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
             ILobby client = factory.CreateChannel();
+            ((ICommunicationObject)client).Open();
             // ----------------------------------------------------------------
 
             try
@@ -151,6 +152,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
 
             var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
             ILobby client = factory.CreateChannel();
+            ((ICommunicationObject)client).Open();
             // ----------------------------------------------------------------
 
             try

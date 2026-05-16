@@ -1,7 +1,8 @@
 ﻿using ConquiánCliente.Properties.Langs;
-using ServiceUserProfile;
 using ConquiánCliente.View;
 using ConquiánCliente.View.Profile;
+using ServiceUserProfile;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.ServiceModel;
@@ -159,23 +160,21 @@ namespace ConquiánCliente.ViewModel.Profile
             Nickname = sessionPlayer.nickname;
             SetProfileImage(System.IO.Path.GetFileName(sessionPlayer.pathPhoto));
 
-            try
-            {
-                // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión HTTP Estándar) ---
-                var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
-                var endpoint = new EndpointAddress("http://localhost:8080/userprofile");
+            var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+            var endpoint = new EndpointAddress("http://localhost:8080/userprofile");
+            var userProfileClient = new UserProfileClient(basicBinding, endpoint);
 
-                var userProfileClient = new UserProfileClient(basicBinding, endpoint);
-                // -----------------------------------------------------------------
+            // 1. Cargar Perfil (Este sí debe avisar si falla)
+            try { await LoadUserProfileAsync(userProfileClient, sessionPlayer.idPlayer); }
+            catch (Exception ex) { HandleLoadDataError(ex); }
 
-                await LoadUserProfileAsync(userProfileClient, sessionPlayer.idPlayer);
-                await LoadUserSocialsAsync(userProfileClient, sessionPlayer.idPlayer);
-                await LoadMatchHistoryAsync(userProfileClient, sessionPlayer.idPlayer);
-            }
-            catch (System.Exception ex)
-            {
-                HandleLoadDataError(ex);
-            }
+            // 2. Cargar Redes Sociales (Silencioso, es normal que no tenga)
+            try { await LoadUserSocialsAsync(userProfileClient, sessionPlayer.idPlayer); }
+            catch { /* Ignorado */ }
+
+            // 3. Cargar Historial (Silencioso, es normal que esté vacío)
+            try { await LoadMatchHistoryAsync(userProfileClient, sessionPlayer.idPlayer); }
+            catch { IsHistoryEmpty = true; }
         }
 
         private async Task LoadUserProfileAsync(UserProfileClient client, int playerId)

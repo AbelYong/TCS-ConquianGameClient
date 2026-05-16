@@ -79,7 +79,9 @@ namespace ConquiánCliente.ViewModel.MainMenu
             if (PlayerSession.IsLoggedIn)
             {
                 Nickname = PlayerSession.CurrentPlayer.nickname;
-                ProfileImagePath = PlayerSession.CurrentPlayer.pathPhoto;
+
+                string imageName = System.IO.Path.GetFileName(PlayerSession.CurrentPlayer.pathPhoto);
+                ProfileImagePath = $"pack://application:,,,/Resources/imageProfile/{imageName}";
             }
         }
 

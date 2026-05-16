@@ -188,6 +188,7 @@ namespace ConquiánCliente.ViewModel.Lobby
 
             factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
             client = factory.CreateChannel();
+            ((ICommunicationObject)client).Open();
             // ----------------------------------------------------------------
 
             SubscribeToChannelEvents();

@@ -290,13 +290,11 @@ namespace ConquiánCliente.ViewModel.Authentication
 
         private async void ExecuteRegisterPlayer(object parameter)
         {
-            if (!ValidateRegistrationData())
-            {
-                return;
-            }
+            if (!ValidateRegistrationData()) return;
 
             PopulatePlayerDto();
             SetLoading(true);
+            bool isSuccess = false;
 
             try
             {
@@ -305,8 +303,7 @@ namespace ConquiánCliente.ViewModel.Authentication
                 var client = new SignUpClient(basicBinding, endpoint);
 
                 await client.RegisterPlayerAsync(playerInProgress);
-
-                HandleRegistrationSuccess(parameter);
+                isSuccess = true;
             }
             catch (Exception ex)
             {
@@ -315,6 +312,11 @@ namespace ConquiánCliente.ViewModel.Authentication
             finally
             {
                 SetLoading(false);
+            }
+
+            if (isSuccess)
+            {
+                HandleRegistrationSuccess(parameter);
             }
         }
 
