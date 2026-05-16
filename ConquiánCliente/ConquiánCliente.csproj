@@ -8,11 +8,44 @@
 		<UseWPF>true</UseWPF>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Remove="Resources\imageProfile\avatar01.JPG" />
+	  <None Remove="Resources\imageProfile\avatar02.JPG" />
+	  <None Remove="Resources\imageProfile\avatar03.JPG" />
+	  <None Remove="Resources\imageProfile\avatar04.JPG" />
+	  <None Remove="Resources\imageProfile\avatar05.JPG" />
+	  <None Remove="Resources\imageProfile\avatar06.JPG" />
+	  <None Remove="Resources\imageProfile\default.JPG" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="System.ServiceModel.Http" Version="6.0.0" />
 		<PackageReference Include="System.ServiceModel.Primitives" Version="6.0.0" />
 		<PackageReference Include="System.ServiceModel.Duplex" Version="6.0.0" />
 		<PackageReference Include="System.ServiceModel.NetTcp" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="Resources\imageProfile\avatar01.JPG">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Resources\imageProfile\avatar02.JPG">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Resources\imageProfile\avatar03.JPG">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Resources\imageProfile\avatar04.JPG">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Resources\imageProfile\avatar05.JPG">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Resources\imageProfile\avatar06.JPG">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
+	  <Resource Include="Resources\imageProfile\default.JPG">
+	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+	  </Resource>
 	</ItemGroup>
 </Project>

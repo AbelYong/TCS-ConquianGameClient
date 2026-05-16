@@ -58,7 +58,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
             // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
             var context = new InstanceContext(LobbyCallbackHandler.Instance);
             var tcpBinding = new NetTcpBinding(SecurityMode.None);
-            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+            var endpoint = new EndpointAddress("net.tcp://127.0.0.1:8081/lobby");
 
             var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
             ILobby client = factory.CreateChannel();
@@ -148,7 +148,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
             // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
             var context = new InstanceContext(LobbyCallbackHandler.Instance);
             var tcpBinding = new NetTcpBinding(SecurityMode.None);
-            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+            var endpoint = new EndpointAddress("net.tcp://127.0.0.1:8081/lobby");
 
             var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
             ILobby client = factory.CreateChannel();

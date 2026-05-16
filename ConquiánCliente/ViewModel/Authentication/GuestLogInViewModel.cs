@@ -56,7 +56,7 @@ namespace ConquiánCliente.ViewModel.Authentication
             var context = new InstanceContext(LobbyCallbackHandler.Instance);
 
             var tcpBinding = new NetTcpBinding(SecurityMode.None);
-            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
+            var endpoint = new EndpointAddress("net.tcp://127.0.0.1:8081/lobby");
 
             // --- 2. CAMBIO AQUÍ: Usamos DuplexChannelFactory para ignorar el cliente roto ---
             var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);

@@ -63,7 +63,7 @@ namespace ConquiánCliente.ViewModel
 
             // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
             var tcpBinding = new NetTcpBinding(SecurityMode.None);
-            var endpoint = new EndpointAddress("net.tcp://localhost:8081/presence");
+            var endpoint = new EndpointAddress("net.tcp://127.0.0.1:8081/presence");
 
             factory = new DuplexChannelFactory<IPresence>(context, tcpBinding, endpoint);
             client = factory.CreateChannel();

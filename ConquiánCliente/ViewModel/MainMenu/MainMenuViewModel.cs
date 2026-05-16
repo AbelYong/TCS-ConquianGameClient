@@ -13,8 +13,22 @@ namespace ConquiánCliente.ViewModel.MainMenu
 {
     public class MainMenuViewModel : ViewModelBase
     {
-        public string Nickname { get; set; }
-        public string ProfileImagePath { get; set; }
+        // --- CAMBIO: Propiedades completas con OnPropertyChanged para que WPF actualice la vista ---
+        private string nickname;
+        public string Nickname
+        {
+            get => nickname;
+            set { nickname = value; OnPropertyChanged(nameof(Nickname)); }
+        }
+
+        private string profileImagePath;
+        public string ProfileImagePath
+        {
+            get => profileImagePath;
+            set { profileImagePath = value; OnPropertyChanged(nameof(ProfileImagePath)); }
+        }
+        // ------------------------------------------------------------------------------------------
+
         public ICommand ViewProfileCommand { get; }
         public ICommand LogoutCommand { get; }
         public ICommand FriendsCommand { get; }
@@ -42,12 +56,10 @@ namespace ConquiánCliente.ViewModel.MainMenu
             if (PlayerSession.CurrentPlayer != null)
             {
                 int playerId = PlayerSession.CurrentPlayer.idPlayer;
-                // --- CAMBIO: Esperamos el Task asíncrono ---
                 Task.Run(async () => await AttemptConnectionSetup(playerId));
             }
         }
 
-        // --- CAMBIO: Se convirtió a async Task ---
         private static async Task AttemptConnectionSetup(int playerId)
         {
             try
@@ -55,7 +67,6 @@ namespace ConquiánCliente.ViewModel.MainMenu
                 InvitationClientManager.Connect(playerId);
                 if (PresenceClientManager.Instance.Client != null)
                 {
-                    // --- CAMBIO: Usamos SubscribeAsync y await ---
                     await PresenceClientManager.Instance.Client.SubscribeAsync(PlayerSession.CurrentPlayer.idPlayer);
                 }
             }
@@ -127,24 +138,20 @@ namespace ConquiánCliente.ViewModel.MainMenu
 
         private async Task SignOutLoginService(int playerId)
         {
-            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 ---
+            // --- CAMBIO: Usamos 127.0.0.1 ---
             var basicBinding = new BasicHttpBinding(BasicHttpSecurityMode.None);
-            var endpoint = new EndpointAddress("http://localhost:8080/login");
+            var endpoint = new EndpointAddress("http://127.0.0.1:8080/login");
             var loginClient = new LoginClient(basicBinding, endpoint);
-            // ----------------------------------------
+            // --------------------------------
             try
             {
                 await loginClient.SignOutPlayerAsync(playerId);
             }
             catch (CommunicationException)
             {
-                // The server may be unavailable or the network may fail at this point.
-                // Logout must still complete locally to avoid leaving the client in an inconsistent state.
             }
             catch (TimeoutException)
             {
-                // A delayed server response during logout is expected in unstable networks.
-                //Blocking the logout would negatively impact user experience, so the error is ignored.
             }
         }
 
@@ -159,13 +166,9 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
             catch (CommunicationException)
             {
-                // Presence unsubscription is a best-effort operation.
-                // If it fails, the server will eventually clean up stale subscriptions automatically.
             }
             catch (TimeoutException)
             {
-                // Presence status is not critical during logout.
-                // The application prioritizes session termination over presence synchronization.
             }
         }
 
@@ -177,10 +180,9 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
             catch (Exception)
             {
-                // This disconnection only releases local resources.
-                // Any failure here should not prevent the user from logging out successfully.
             }
         }
+
         private void TransitionToLogin(Window currentWindow)
         {
             PlayerSession.EndSession();
@@ -206,6 +208,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
                 mainMenuWindow.Close();
             }
         }
+
         private void ExecutePlay(object parameter)
         {
             if (isLoading)
