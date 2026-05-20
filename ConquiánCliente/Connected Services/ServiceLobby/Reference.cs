@@ -830,7 +830,7 @@ namespace ServiceLobby
         {
             if ((endpointConfiguration == EndpointConfiguration.NetTcpBinding_ILobby))
             {
-                return new System.ServiceModel.EndpointAddress("net.tcp://0.0.0.0:8081/lobby");
+                return new System.ServiceModel.EndpointAddress("net.tcp://localhost:8081/lobby");
             }
             throw new System.InvalidOperationException(string.Format("No se pudo encontrar un punto de conexión con el nombre \"{0}\".", endpointConfiguration));
         }

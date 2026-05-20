@@ -9,6 +9,50 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	</PropertyGroup>
 	<ItemGroup>
+	  <None Remove="Resources\Assets\Bastos\bastos_10s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_11s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_12s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_1s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_2s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_3s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_4s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_5s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_6s.png" />
+	  <None Remove="Resources\Assets\Bastos\bastos_7s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_10s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_11s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_12s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_1s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_2s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_3s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_4s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_5s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_6s.png" />
+	  <None Remove="Resources\Assets\Copas\copas_7s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_10s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_11s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_12s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_1s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_2s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_3s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_4s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_5s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_6s.png" />
+	  <None Remove="Resources\Assets\Espadas\espadas_7s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_10s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_11s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_12s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_1s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_2s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_3s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_4s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_5s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_6s.png" />
+	  <None Remove="Resources\Assets\Oros\oros_7s.png" />
+	  <None Remove="Resources\Assets\reverso.png" />
+	  <None Remove="Resources\background.jpg" />
+	  <None Remove="Resources\backgroundGame.jpg" />
+	  <None Remove="Resources\facebook.png" />
 	  <None Remove="Resources\imageProfile\avatar01.JPG" />
 	  <None Remove="Resources\imageProfile\avatar02.JPG" />
 	  <None Remove="Resources\imageProfile\avatar03.JPG" />
@@ -16,6 +60,23 @@
 	  <None Remove="Resources\imageProfile\avatar05.JPG" />
 	  <None Remove="Resources\imageProfile\avatar06.JPG" />
 	  <None Remove="Resources\imageProfile\default.JPG" />
+	  <None Remove="Resources\instagram.png" />
+	  <None Remove="Resources\MexicoFlag.png" />
+	  <None Remove="Resources\Music\GameMusic.mp3" />
+	  <None Remove="Resources\Music\MainMenuMusic.mp3" />
+	  <None Remove="Resources\USAFlag.png" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Resource Include="Resources\Assets\Copas\copas_10s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_11s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_12s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_1s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_2s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_3s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_4s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_5s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_6s.png" />
+	  <Resource Include="Resources\Assets\Copas\copas_7s.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -26,6 +87,40 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Resource Include="Resources\Assets\Bastos\bastos_10s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_11s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_12s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_1s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_2s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_3s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_4s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_5s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_6s.png" />
+	  <Resource Include="Resources\Assets\Bastos\bastos_7s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_10s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_11s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_12s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_1s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_2s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_3s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_4s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_5s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_6s.png" />
+	  <Resource Include="Resources\Assets\Espadas\espadas_7s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_10s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_11s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_12s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_1s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_2s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_3s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_4s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_5s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_6s.png" />
+	  <Resource Include="Resources\Assets\Oros\oros_7s.png" />
+	  <Resource Include="Resources\Assets\reverso.png" />
+	  <Resource Include="Resources\background.jpg" />
+	  <Resource Include="Resources\backgroundGame.jpg" />
+	  <Resource Include="Resources\facebook.png" />
 	  <Resource Include="Resources\imageProfile\avatar01.JPG">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
@@ -47,5 +142,10 @@
 	  <Resource Include="Resources\imageProfile\default.JPG">
 	    <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 	  </Resource>
+	  <Resource Include="Resources\instagram.png" />
+	  <Resource Include="Resources\MexicoFlag.png" />
+	  <Resource Include="Resources\Music\GameMusic.mp3" />
+	  <Resource Include="Resources\Music\MainMenuMusic.mp3" />
+	  <Resource Include="Resources\USAFlag.png" />
 	</ItemGroup>
 </Project>

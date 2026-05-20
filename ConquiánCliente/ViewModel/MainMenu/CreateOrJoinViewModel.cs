@@ -55,15 +55,13 @@ namespace ConquiánCliente.ViewModel.MainMenu
 
             SetLoadingState(true);
 
-            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
             var context = new InstanceContext(LobbyCallbackHandler.Instance);
             var tcpBinding = new NetTcpBinding(SecurityMode.None);
-            var endpoint = new EndpointAddress("net.tcp://127.0.0.1:8081/lobby");
+            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
 
             var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
             ILobby client = factory.CreateChannel();
             ((ICommunicationObject)client).Open();
-            // ----------------------------------------------------------------
 
             try
             {
@@ -71,7 +69,7 @@ namespace ConquiánCliente.ViewModel.MainMenu
             }
             catch (FaultException<ServiceLobby.ServiceFaultDto> ex)
             {
-                HandleServiceFault(ex);
+                HandleServiceFault(ex, isInfo: true);
             }
             catch (EndpointNotFoundException)
             {
@@ -145,15 +143,13 @@ namespace ConquiánCliente.ViewModel.MainMenu
 
             SetLoadingState(true);
 
-            // --- CAMBIO APLICADO AQUÍ PARA .NET 8 (Conexión TCP / Duplex) ---
             var context = new InstanceContext(LobbyCallbackHandler.Instance);
             var tcpBinding = new NetTcpBinding(SecurityMode.None);
-            var endpoint = new EndpointAddress("net.tcp://127.0.0.1:8081/lobby");
+            var endpoint = new EndpointAddress("net.tcp://localhost:8081/lobby");
 
             var factory = new DuplexChannelFactory<ILobby>(context, tcpBinding, endpoint);
             ILobby client = factory.CreateChannel();
             ((ICommunicationObject)client).Open();
-            // ----------------------------------------------------------------
 
             try
             {

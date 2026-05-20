@@ -365,7 +365,7 @@ namespace ServiceInvitation
         {
             if ((endpointConfiguration == EndpointConfiguration.NetTcpBinding_IInvitationService))
             {
-                return new System.ServiceModel.EndpointAddress("net.tcp://0.0.0.0:8081/invitation");
+                return new System.ServiceModel.EndpointAddress("net.tcp://localhost:8081/invitation");
             }
             throw new System.InvalidOperationException(string.Format("No se pudo encontrar un punto de conexión con el nombre \"{0}\".", endpointConfiguration));
         }
